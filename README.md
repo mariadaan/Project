@@ -3,11 +3,16 @@
 Maria Daan (11243406)
 
 ## Amsterdamse woningmarkt
-Het is in Amsterdam niet makkelijk om een betaalbaar huis te vinden, met name voor studenten. Door de grote vraag en het grote aandeel particuliere huur zijn de prijzen hoog. Deze datavisualisatie is bedoeld om inzicht te krijgen in de woningvoorraad per
-stadsdeel en alles wat hierbij komt kijken: prijzen, omvang, eigendomscategorieën, bewonerskenmerken etc. Het doel van dit project is om een duidelijk overzicht van de huidige  woningmarkt in Amsterdam neer te zetten, wat aantoont in welke gebieden de kans op een woning voor studenten het grootste is.
+Het is in Amsterdam niet makkelijk om een betaalbaar huis te vinden, met name voor studenten. Door de grote vraag en het grote aandeel particuliere huur zijn de prijzen hoog. Deze datavisualisatie is bedoeld om inzicht te krijgen in de woningvoorraad per stadsdeel en alles wat hierbij komt kijken: prijzen, omvang, eigendomscategorieën, bewonerskenmerken etc. Het doel van dit project is om een duidelijk overzicht van de huidige  woningmarkt in Amsterdam neer te zetten, wat aantoont in welke gebieden de kans op een woning voor studenten het grootste is.
 
 ## Visualisatie
-Om duidelijk de verschillen tussen stadsdelen weer te geven, wordt er gebruik gemaakt van een kaart. Dit is een kaart van Amsterdam, waarbij elk stadsdeel over informatie beschikt. Als je op een stadsdeel klikt, komt er een histogram (stacked barchart) en een cirkeldiagram tevoorschijn. In het histogram is de inkomensverdeling te zien van de bewoners van dit gebied. In de cirkeldiagram is de samenstelling van de woningvoorraad te zien: aandeel particuliere huurwoningen, aandeel sociale huurwoningen, aandeel koopwoningen, etc. Verder wordt er nog wat extra informatie weergegeven zoals de naam van het stadsdeel, het aantal inwoners en kenmerken van recente instromers. In onderstaande afbeelding is een voorbeeld te zien van hoe dit er ongeveer uit gaat zien.
+Om duidelijk de verschillen tussen stadsdelen weer te geven, wordt er gebruik gemaakt van een kaart. Dit is een kaart van Amsterdam, waarbij elk stadsdeel over informatie beschikt. Hoe donker de kleur is die het stadsdeel heeft, zegt iets over de huurklasse. In de data worden 4 klasses gebruikt: tot €425,	€425-575, €575-681 en	>€681. De kleur betekent het percentage woningen in de eerste klasse. Op de afbeelding hieronder zijn alle kleuren nog verschillend, dit moet nog doorgevoerd worden.
+
+Als je op een stadsdeel klikt, komt er een histogram (stacked barchart) en een cirkeldiagram tevoorschijn. In het histogram is iets gedetailleerder te zien hoe het precies zit met de woningvoorraad op gebied van huurprijzen. De 4 klasses die hiervoor besproken zijn, worden in de barchart weergegeven. De tweede bar geeft de inkomensverdeling weer, verdeeld over 6 klasses. Bij beide bars worden ook de absolute cijfers die hierbij horen weergegeven.
+
+In de cirkeldiagram is de omvang van de woningvoorraad naar eigendomscategorie te zien: aandeel particuliere huurwoningen, aandeel corporatie-woningen en aandeel koopwoningen. Om deze aantallen concreter te maken wordt ook het exacte aantal weergegeven in dit diagram.
+
+Ook komt er wat algemene informatie in beeld: de naam van het stadsdeel, het aantal inwoners en het gemiddelde inkomen. Ook wordt hier extra informatie getoond die interessant kan zijn voor studenten: het percentage 18-25 jarigen in de buurt (zowel zittende bewoners als recente instromers), het percentage hurende bewoners dat gebruik maakt van huurtoeslag en het percentage bewoners met een HBO-WO opleidingsniveau. In onderstaande afbeelding is een voorbeeld te zien van hoe dit er ongeveer uit gaat zien.
 
 ![blah](https://github.com/mariadaan/Project/blob/master/doc/map.jpg)
 
