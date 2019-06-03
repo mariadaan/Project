@@ -16,6 +16,9 @@ Ook komt er wat algemene informatie in beeld: de naam van het stadsdeel, het aan
 
 ![blah](https://github.com/mariadaan/Project/blob/master/doc/map.jpg)
 
+## Extra
+Aan deze datavisualisatie kunnen nog veel meer extra features toegevoegd worden die zouden kunnen helpen bij het vinden van een geschikte buurt voor een student. Zo zijn er bijvoorbeeld allerlei projecten voor de bouw van studentenwoningen gaande in Amsterdam, dus deze zouden benoemd kunnen worden als je op een stadsdeel klikt. Dit soort informatie is wat minder exact en is vooral leuk als er nog tijd over is. 
+
 ## Data sources
 De kaart op de afbeelding is een bestaande D3 kaart van tram/metro/trein lijnen en haltes/stations in Amsterdam en omstreken. Deze kaart kan ik goed gebruiken voor mijn project. Omdat mijn project echter niet over openbaar vervoer gaat, moeten hier aanpassingen aan gedaan worden. Ook moeten de namen van de buurten gekoppeld worden aan stadsdelen en zo aan data over de woningmarkt. Deze kaart is gemaakt in D3 versie 4, dus dit moet ook getransformeerd worden naar versie 5.
 - http://bl.ocks.org/JulesBlm/918e2987805c7189f568d95a4e8855b4
