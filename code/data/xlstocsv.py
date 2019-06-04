@@ -15,11 +15,9 @@ excel_files = [
 
 for file in excel_files:
     data_xls = pd.read_excel(file, '2', index_col=0)
-    # Select rows with index values 'totaal', with all columns between 'tot € 425' and '> € 681'
     data_xls = data_xls.loc['totaal']
     with open('files.csv', 'a') as f:
         print(data_xls)
-        # if row.str[:6] is 'totaal':
         data_xls.to_csv(f, header=False)
 
 # df = pd.concat([pd.read_excel(f) for f in excel_files])
