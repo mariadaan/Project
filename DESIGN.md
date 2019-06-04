@@ -45,10 +45,12 @@ Om hier te komen heb ik de volgende files nodig:
 - convertXLS2CSV.py
 - convertCSV2JSON.py
 
+### Functionaliteit
+
 De namen van de stadsdelen kunnen zo gekoppeld worden aan de namen van de stadsdelen die de kaart bevat. Ik gebruik een bestaande D3 kaart van Amsterdam (http://bl.ocks.org/JulesBlm/918e2987805c7189f568d95a4e8855b4#trammetro.json). Deze pas ik zodanig aan dat het niet meer op buurtschaal, maar op stadsdeel schaal opereert. Ook gaat deze kaart over het ov netwerk, wat voor mij niet interessant is. Dit onderdeel moet dus verwijderd worden. De informatie uit sheet 2, de omvang van de huurvoorraad, wordt gebruikt om de kleur van elk stadsdeel op de kaart weer te geven: hoe donkerder, hoe hoger de huurprijs. De omvang van de huurvoorraad in de data is verdeeld over 4 categorieën en is dus niet één gemiddelde. Omdat de laagste categorie vooral interessant is voor studenten, wordt het percentage huurwoningen onder de 425 euro weergegeven. Als je over de stadsdelen heen 'hovert', krijg je in een tooltip de naam van het stadsdeel en dit exacte percentage te zien.
 
 Als je vervolgens op een stadsdeel klikt, komen er 3 grafieken in beeld. In de stacked barchart zijn twee variabelen af te lezen. Allereerst de inkomensverdeling (sheet 17) waarin zichtbaar is hoe groot het aandeel mensen in elke inkomensklasse is. In de andere bar is een gedetailleerde verdeling te zien van de informatie die de kleuren op de kaart ook al weergeven: het aandeel mensen in elke huurklasse. Dit is interssant om naast elkaar te zien omdat er een verband bestaat tussen deze variabelen.
 
-In de cirkeldiagram wordt duidelijk hoe het zit met de eigendomscategorieën in het aangeklikte stadsdeel. In de tooltip staat hoe groot het percentage van elke categorie precies is. Aan deze diagram is verder geen interactiviteit verbonden.
+In de cirkeldiagram wordt duidelijk hoe het zit met de eigendomscategorieën in het aangeklikte stadsdeel. In de tooltip staat hoe groot het percentage van elke categorie precies is. Aan deze diagram is verder geen interactiviteit verbonden. Mocht dit later toch nog moeten, dan zou ik hierbij nog iets met sheet 3 kunnen doen: Verdeling huurvoorraad naar huurklassen en eigendomscategorie als percentage van de totale woningvoorraad.
 
 Als laatste staat in de tabel alle overige informatie. Een aantal van de elementen hierin zullen klikbaar zijn. Er zal een tekstje met meer informatie zichtbaar worden over dit onderwerp in dit specifieke stadsdeel. Deze informatie zal ik zelf bij elkaar zoeken en komt niet uit één specifieke database.
