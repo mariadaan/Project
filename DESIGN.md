@@ -1,5 +1,5 @@
 ## Data
-Ik maak gebruik van 8 verschillende excel bestanden. Deze hebben wel allemaal exact dezelfde structuur, dus 1 python script moet genoeg zijn om deze tot een bruikbare JSON file te transformeren. De Excel bestanden hebben allemaal 37 verschillende sheets, waar er 7 van door mij gebruikt worden.
+Ik maak gebruik van 7 verschillende excel bestanden. Deze hebben wel allemaal exact dezelfde structuur, dus 1 python script moet genoeg zijn om deze tot een bruikbare JSON file te transformeren. De Excel bestanden hebben allemaal 37 verschillende sheets, waar er 7 van door mij gebruikt worden.
 
 Gebruikte datasets:
 - centrum_excel.xlsx
@@ -19,6 +19,15 @@ Gebruikte sheets:
 - 19: Leeftijdsgroep recente instromers en zittende bewoners
 - 20: Opleidingsniveau recente instromers en zittende bewoners
 
+De gesimplificeerde namen voor deze sheets die in de code worden gebruikt zijn:
+- 1: Eigendomscategorie
+- 2: Huurvoorraad
+- 16: Inkomen
+- 17: Inkomensgroepen
+- 18: Woonsituatie
+- 19: Leeftijdsgroep
+- 20: Opleidingsniveau
+
 De kleur van de stadsdelen in de kaart is gebaseerd op sheet 2.
 De informatie in de stacked barchart is gebaseerd op sheet 2 en 17.
 De cirkeldiagram toont de informatie in sheet 1.
@@ -27,7 +36,7 @@ Een tabel met extra informatie toont de data in sheet 16, 18, 19 en 20.
 Binnen de sheets moet ook nog veel gefilterd worden. Omdat de informatie alleen per stadsdeel en niet per buurt weergegeven gaat worden, wordt naar de totaalcijfers in de bestanden gekeken. Dit is dus maar 1 line met data uit elke sheet. Sommige sheets moeten horizontaal worden gelezen, sommige verticaal. Hierin moet onderscheid gemaakt worden zodat alle data op de juiste manier ingelezen kan worden. Het transformeren van de data is een vrij groot obstakel, maar als dit eenmaal is gelukt ga ik ervanuit dat het makkelijk te gebruiken is om de datavisualisaties te maken. Er is genoeg data en alles is compleet en duidelijk gestructureerd. De vorm waarin ik het uiteindelijk wil hebben is zo:
 
 JSON File:
-{"Centrum":{"1":{"Koopwoningen": 36,"Corporatiewoningen": 31,"Particuliere huurwoningen": 33}, "2": {...}, "16":{...}}, "West":{"1":{...}, "2":{...}}, "Nieuw-West":{...}}
+{"Centrum":{"Eigendomscategorie":{"Koopwoningen": 36,"Corporatiewoningen": 31,"Particuliere huurwoningen": 33}, "Huurvoorraad": {...}, "Inkomen":{...}}, "West":{"1":{...}, "2":{...}}, "Nieuw-West":{...}}
 
 Om hier te komen heb ik de volgende files nodig:
 - convertXLS2CSV.py
