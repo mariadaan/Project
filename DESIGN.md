@@ -1,5 +1,5 @@
 ## Data
-Ik maak gebruik van 7 verschillende excel bestanden. Deze hebben wel allemaal exact dezelfde structuur, dus 1 python script moet genoeg zijn om deze tot een bruikbare JSON file te transformeren. De Excel bestanden hebben allemaal 37 verschillende sheets, waarvan er 7 door mij gebruikt worden.
+Ik maak gebruik van 7 verschillende excel bestanden. Deze hebben allemaal dezelfde structuur en de data is compleet. De Excel bestanden hebben allemaal 37 verschillende sheets, waarvan er 7 door mij gebruikt worden. Omdat elke sheet anders in elkaar zit en de hoeveelheid data te overzien is, was het het snelste om de relevante data handmatig in één bestand te zetten.
 
 Gebruikte datasets:
 - centrum_excel.xlsx
@@ -28,29 +28,53 @@ De gesimplificeerde namen voor deze sheets die in de code worden gebruikt zijn:
 - 19: Leeftijdsgroep
 - 20: Opleidingsniveau
 
-De kleur van de stadsdelen in de kaart: sheet 2.
-Stacked barchart: sheet 2 en 17.
-Cirkeldiagram : sheet 1.
-Tabel: sheet 16, 18, 19 en 20.
+Binnen de sheets moet ook nog veel gefilterd worden. Omdat de informatie alleen per stadsdeel en niet per buurt weergegeven gaat worden, wordt naar de totaalcijfers in de bestanden gekeken. Deze totaalcijfers heb ik gekopieerd naar het samengevoegde Excel bestand in een gewenste structuur. Het CSV bestand moet in de rijen alle stadsdelen en in de kolommen alle bijbehorende cijfers hebben. De cijfers zijn allemaal naast elkaar in de kolommen genoteerd.
 
-Binnen de sheets moet ook nog veel gefilterd worden. Omdat de informatie alleen per stadsdeel en niet per buurt weergegeven gaat worden, wordt naar de totaalcijfers in de bestanden gekeken. Dit is dus maar 1 line met data uit elke sheet. Sommige sheets moeten horizontaal worden gelezen, sommige verticaal. Hierin moet onderscheid gemaakt worden zodat alle data op de juiste manier ingelezen kan worden. Het transformeren van de data is een vrij groot obstakel, maar als dit eenmaal is gelukt ga ik ervanuit dat het makkelijk te gebruiken is om de datavisualisaties te maken. Er is genoeg data en alles is compleet en duidelijk gestructureerd.
-
-De CSV file moet in de rijen alle stadsdelen en in alle kolommen alle cijfers hebben. De meeste informatie heeft meerdere waarden per categorie, maar van veel categorieën wordt maar 1 waarde gebruikt die specifiek relevant is voor studenten (sheet 16, 18, 19, 20). Van een aantal categorieën worden echter meerdere waarden gebruikt (sheet 1, 2, 17), dus deze moeten achter elkaar in de rij genoteerd worden.
-
-De vorm waarin ik de JSON uiteindelijk wil hebben is zo:
+Het JSON bestand moet zo uit gaan zien:
 JSON File:
-{"Centrum":{"Eigendomscategorie":{"Koopwoningen": 36,"Corporatiewoningen": 31,"Particuliere huurwoningen": 33}, "Huurvoorraad": {...}, "Inkomen":...}, "West":{"1":{...}, "2":{...}}, "Nieuw-West":{...}}
+{
+	"Centrum": {
+		"koopwoningen": 0.36,
+		"corporatie-woningen": 0.31,
+		"particuliere huurwoningen": 0.33,
+		"< 425": 0.45,
+		"425-575": 0.29,
+		"575-681": 0.07,
+		.....
+		"lager middelbaar": 0.15,
+		"hoger middelbaar": 0.31,
+		"HBO/WO": 0.51
+	},
+	"West": {
+		"koopwoningen": 0.29,
+    ....
+  }
+}
 
-Om hier te komen heb ik de volgende files nodig:
+Om hier te komen gebruik ik de volgende files:
 - convertXLS2CSV.py
 - convertCSV2JSON.py
 
 ### Functionaliteit
 
-De namen van de stadsdelen kunnen zo gekoppeld worden aan de namen van de stadsdelen die de kaart bevat. Ik gebruik een bestaande D3 kaart van Amsterdam (http://bl.ocks.org/JulesBlm/918e2987805c7189f568d95a4e8855b4#trammetro.json). Deze pas ik zodanig aan dat het niet meer op buurtschaal, maar op stadsdeel schaal opereert. Ook gaat deze kaart over het ov netwerk, wat voor mij niet interessant is. Dit onderdeel moet dus verwijderd worden. De informatie uit sheet 2, de omvang van de huurvoorraad, wordt gebruikt om de kleur van elk stadsdeel op de kaart weer te geven: hoe donkerder, hoe hoger de huurprijs. De omvang van de huurvoorraad in de data is verdeeld over 4 categorieën en is dus niet één gemiddelde. Omdat de laagste categorie vooral interessant is voor studenten, wordt het percentage huurwoningen onder de 425 euro weergegeven. Als je over de stadsdelen heen 'hovert', krijg je in een tooltip de naam van het stadsdeel en dit exacte percentage te zien.
+De kleur van de stadsdelen in de kaart: sheet 2.
+Stacked barchart: sheet 2 en 17.
+Cirkeldiagram : sheet 1, 16, 18, 19, 20.
 
-Als je vervolgens op een stadsdeel klikt, komen er 3 grafieken in beeld. In de stacked barchart zijn twee variabelen af te lezen. Allereerst de inkomensverdeling (sheet 17) waarin zichtbaar is hoe groot het aandeel mensen in elke inkomensklasse is. In de andere bar is een gedetailleerde verdeling te zien van de informatie die de kleuren op de kaart ook al weergeven: het aandeel mensen in elke huurklasse. Dit is interssant om naast elkaar te zien omdat er een verband bestaat tussen deze variabelen.
+De namen van de stadsdelen kunnen gekoppeld worden aan de namen van de stadsdelen die de kaart bevat. Ik gebruik een bestaande D3 kaart van Amsterdam (http://bl.ocks.org/JulesBlm/918e2987805c7189f568d95a4e8855b4#trammetro.json). Deze kaart beschikt over stadsdeel-informatie, ook al is de kaart meer op buurtschaal gemaakt. Elke buurt heeft een 'Stadsdeel_code', die gebruikt kan worden om mijn data te koppelen aan de kaartobjecten. De initiële kaart gaat over het ov netwerk, wat voor mij niet interessant is. Dit onderdeel wordt dus verwijderd. De informatie uit sheet 2, de omvang van de huurvoorraad, wordt gebruikt om de kleur van elk stadsdeel op de kaart weer te geven: hoe donkerder, hoe hoger de huurprijs. De omvang van de huurvoorraad in de data is verdeeld over 4 categorieën en is dus niet één gemiddelde. Omdat de laagste categorie vooral interessant is voor studenten, wordt het percentage huurwoningen onder de 425 euro weergegeven. Als je over de stadsdelen heen beweegt met je muis, krijg je in een tooltip de naam van het stadsdeel en dit exacte percentage te zien.
 
-In de cirkeldiagram wordt duidelijk hoe het zit met de eigendomscategorieën in het aangeklikte stadsdeel. In de tooltip staat hoe groot het percentage van elke categorie precies is. Aan deze diagram is verder geen interactiviteit verbonden. Mocht dit later toch nog moeten, dan zou ik hierbij nog iets met sheet 3 kunnen doen: Verdeling huurvoorraad naar huurklassen en eigendomscategorie als percentage van de totale woningvoorraad.
+Als je vervolgens op een stadsdeel klikt, komen er 2 grafieken in beeld. In de stacked barchart zijn twee variabelen af te lezen. Allereerst de inkomensverdeling (sheet 17) waarin zichtbaar is hoe groot het aandeel mensen in elke inkomensklasse is. In de andere bar is een gedetailleerde verdeling te zien van de informatie die de kleuren op de kaart ook al weergeven: het aandeel mensen in elke huurklasse. Dit is interessant om naast elkaar te zien omdat er een verband bestaat tussen deze variabelen.
 
-Als laatste staat in de tabel alle overige informatie. Een aantal van de elementen hierin zullen klikbaar zijn. Er zal een tekstje met meer informatie zichtbaar worden over dit onderwerp in dit specifieke stadsdeel. Deze informatie zal ik zelf bij elkaar zoeken en komt niet uit één specifieke database.
+In de cirkeldiagram wordt in eerste instantie duidelijk hoe het zit met de eigendomscategorieën in het aangeklikte stadsdeel. In de tooltip staat hoe groot het percentage van elke categorie precies is. Met een drop-down menu kan je overschakelen naar andere informatie (sheet 16, 18, 19 of 20). Een aantal van de elementen hierin zullen klikbaar zijn. Er zal een tekstje met meer informatie zichtbaar worden over dit onderwerp in dit specifieke stadsdeel. Deze informatie zal ik zelf bij elkaar zoeken en komt niet uit één specifieke database.
+
+### Functies
+In de javascript code worden verschillende functies gebruikt om deze functionaliteit te realiseren.
+
+- makeMap
+- makeLegend
+- makeBarchart
+- makePiechart
+
+De eerste en belangrijkste functie is "makeMap". Deze functie wordt gebruikt om de volledige kaart van Amsterdam op de pagina te zetten. De makeLegend functie hoort hierbij, deze is om de kleuren in de kaart te verklaren.
+
+Vervolgens zijn de functies "makeBarchart" en "makePiechart" nodig om de grafieken te maken. Deze functies worden beide aangeroepen op het moment dat de gebruiker een stadsdeel aanklikt.

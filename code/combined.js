@@ -9,16 +9,16 @@ Promise.all(requests).then(function(res) {
     });
 
 function makeMap(buurtdata, data){
-  var stadsdeel = {"A": "Centrum","B": "Westpoort", "E": "West", "M": "Oost", "K": "Zuid", "F": "Nieuw-west", "N": "Noord", "T": "Zuidoost"}
-  var stadsdeelnaam = ""
-  console.log(buurtdata.objects.buurten.geometries)
-  testje = buurtdata.objects.buurten.geometries
+  var stadsdeel = {"A": "Centrum","B": "Nieuw-West", "E": "West", "M": "Oost", "K": "Zuid", "F": "Nieuw-West", "N": "Noord", "T": "Zuidoost"}
 
+  var stadsdeelnaam = ""
+  testje = buurtdata.objects.buurten.geometries  
   var i;
   for (i = 0; i < testje.length; i++) {
     code = testje[i].properties.Stadsdeel_code
     stadsdeelnaam = stadsdeel[code]
     console.log(stadsdeelnaam);
+    console.log(data[stadsdeelnaam]['< 425'])
   }
 
   var margin = {top: 40, right: 40, bottom: 40, left: 40};
