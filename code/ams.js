@@ -1,3 +1,11 @@
+// Load in data
+// var requests = [d3.json("buurten.json"), d3.json("database.json")];
+// Promise.all(requests).then(function(res) {
+//     makeMap(res[0], res[1])
+// }).catch(function(e){
+//     throw(e);
+//     });
+
 var margin = {top: 40, right: 40, bottom: 40, left: 40};
 
 var svg = d3.select("#map"),
