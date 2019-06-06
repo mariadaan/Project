@@ -47,6 +47,29 @@ body {
   left: 0;
 }
 
+/* Set style for barchart svg */
+#barchart {
+	float: right;
+	width: 600px;
+	margin-left: 6px;
+	margin-right: 80px;
+	margin-top: 20px;
+	padding: 20px;
+	background-color: white;
+	box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+}
+
+/* Set style for bar chart */
+.bar {
+		fill: LightSkyBlue;
+	}
+.bar:hover {
+		fill: LightSlateGrey;
+	}
+text {
+		font-family: sans-serif;
+	}
+
 /*Lines*/
 .buurt-borders {
   fill: none;
