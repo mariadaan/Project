@@ -9,17 +9,19 @@ Promise.all(requests).then(function(res) {
     });
 
 function makeMap(buurtdata, data){
+  console.log(buurtdata)
   var stadsdeel = {"A": "Centrum","B": "Nieuw-West", "E": "West", "M": "Oost", "K": "Zuid", "F": "Nieuw-West", "N": "Noord", "T": "Zuidoost"}
-
-  var stadsdeelnaam = ""
-  testje = buurtdata.objects.buurten.geometries  
-  var i;
-  for (i = 0; i < testje.length; i++) {
-    code = testje[i].properties.Stadsdeel_code
-    stadsdeelnaam = stadsdeel[code]
-    console.log(stadsdeelnaam);
-    console.log(data[stadsdeelnaam]['< 425'])
-  }
+  //
+  // var stadsdeelnaam = ""
+  // testje = buurtdata.objects.buurten.geometries
+  // var i;
+  // for (i = 0; i < testje.length; i++) {
+  //   code = testje[i].properties.Stadsdeel_code
+  //   stadsdeelnaam = stadsdeel[code]
+    // console.log(stadsdeelnaam);
+    // console.log(data[stadsdeelnaam]['< 425'])
+    // console.log(data[stadsdeelnaam]['particuliere huurwoningen'])
+  // }
 
   var margin = {top: 40, right: 40, bottom: 40, left: 40};
 
@@ -40,9 +42,9 @@ function makeMap(buurtdata, data){
   var path = d3.geoPath()
     .projection(projection);
 
-  var colorScale = d3.scaleOrdinal(d3.schemeCategory10)
-      colorStadsdelen = d3.scaleOrdinal(d3.schemePastel2); //d3.schemeGreys)
-      colorLines = d3.scaleSequential(d3.schemeCategory10);
+  // var colorScale = d3.scaleOrdinal(d3.schemeCategory10)
+  //     colorStadsdelen = d3.scaleOrdinal(d3.schemePastel2); //d3.schemeGreys)
+  //     colorLines = d3.scaleSequential(d3.schemeCategory10);
 
   svg.append("text")
     .attr("x", 0)
@@ -60,6 +62,17 @@ function makeMap(buurtdata, data){
 
   /* Areas */
   var stadsdelen = topojson.feature(buurtdata, buurtdata.objects.buurten).features;
+  var stadsdeelnaam = ""
+
+  // Create tooltip element
+  var tool_tip = d3.tip()
+      .attr("class", "d3-tip")
+      .offset([-8, 0])
+      .html(function(d) {
+        stadsdeelnaam = stadsdeel[d.properties.Stadsdeel_code]
+        return stadsdeelnaam + " (" + d.properties.Buurtcombinatie + ")" + "<br>" + data[stadsdeelnaam]['< 425'];
+      });
+    svg.call(tool_tip);
 
   // Draw the buurten
   svg.selectAll(".buurt")
@@ -68,8 +81,7 @@ function makeMap(buurtdata, data){
       .append("path")
         .attr("class", "buurt")
         .attr("d", path)
-        // .attr("fill", "#faebc4")
-        .attr("fill", function(d) { return colorStadsdelen(d.properties.Stadsdeel_code[0]) })
+        // .attr("fill", function(d) { return colorStadsdelen(d.properties.Stadsdeel_code[0]) })
       .append("title")
         .text(function(d) { return stadsdeel[d.properties.Stadsdeel_code] + ": " + d.properties.Buurtcombinatie });
 
@@ -78,31 +90,39 @@ function makeMap(buurtdata, data){
       .attr("class", "stadsdeel-borders")
       .attr("d", path(topojson.mesh(buurtdata, buurtdata.objects.buurten, function(a, b) { return stadsdeel[a.properties.Stadsdeel_code] !== stadsdeel[b.properties.Stadsdeel_code]; })));
 
-
-	// Create tooltip element
-	var tool_tip = d3.tip()
-      .attr("class", "d3-tip")
-      .offset([-8, 0])
-      .html(function(d) {
-        return d.objects.buurten.geometries.Stadsdeel_code
-				// return d.properties.admin + "<br>" + data[d.properties.admin]["< 425"];
-			});
-    svg.call(tool_tip);
+  var color = d3.scaleLinear()
+  .domain([25, 60])
+  .range(["rgba(78, 137, 41, 0.3)", "rgba(78, 137, 41, 1)"]);
 
 	// Make map interactive
-	svg.selectAll("path")
-	   .data(buurtdata.objects.buurten.geometries)
-	   .enter()
-	   .append("path")
-	   .attr("d", path)
-	   .attr("stroke", "rgba(8, 81, 156, 0.2)")
-	   .attr("fill", "rgba(8, 81, 156, 0.1)")
+	svg.selectAll(".buurt")
+	   .attr("stroke", "rgba(0, 0, 0, 0.3)")
+	   // .attr("fill", "rgba(255, 0, 0, 0.5)")
+     .attr('fill',function(d, i) {
+       return color(parseInt((data[stadsdeel[d.properties.Stadsdeel_code]]['< 425']) * 100)); })
+     .on("click", function(d){
+       console.log(data[stadsdeelnaam]['< 425'])
+       console.log(stadsdeel[d.properties.Stadsdeel_code])})
 		 .on('mouseover', tool_tip.show)
      .on('mouseout', tool_tip.hide)
-		 .on("click", function(d){
-       console.log(d.properties.Stadsdeel_code)
 			 // makeBarchart(d.properties.admin, data)
-			});
+
+// data[stadsdeelnaam]['< 425']) * 10
+
+     // var svg = d3.select('body')
+     //     .append('svg')
+     //     .attr('width',500)
+     //     .attr('height',200);
+     // //
+     // svg.selectAll('.buurt')
+     //     .data(d3.range(10))
+     //     .enter()
+     //     .append('rect')
+     //     .attr('x',function(d,i) { return i * 40; })
+     //     .attr('y',30)
+     //     .attr('width',30)
+     //     .attr('height',30)
+     //     .attr('fill',function(d,i) { return color(i); });
 
 };
 
