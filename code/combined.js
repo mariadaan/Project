@@ -23,7 +23,7 @@ function makeMap(buurtdata, data){
     .center([4.9, 52.366667])
     .parallels([51.5, 51.49])
     .rotate(120)
-    .scale(250000)
+    .scale(150000)
     .translate([width / 2, height / 2]);
 
   //Define path generator
@@ -83,10 +83,84 @@ function makeMap(buurtdata, data){
        return color(parseInt((data[stadsdeel[d.properties.Stadsdeel_code]]['< 425']) * 100)); })
      .on("click", function(d){
        makeBarchart(data, stadsdeelnaam)
+       // makePiechart(data, stadsdeelnaam)
         })
 		 .on('mouseover', tool_tip.show)
      .on('mouseout', tool_tip.hide)
 };
+
+function makePiechart(data, stadsdeelnaam){
+  // Remove former piechart and title, if existing
+  // d3.select("#piechart").select("svg").remove();
+  // d3.select("#titlebars").select("h1").remove();
+
+
+  // set the dimensions and margins of the graph
+  var width = 450
+      height = 450
+      margin = 40
+
+  // The radius of the pieplot is half the width or half the height (smallest one). I substract a bit of margin.
+  var radius = Math.min(width, height) / 2 - margin
+
+  // append the svg object to the div called 'piechart'
+  var svg = d3.select("#piechart")
+    .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+    .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+
+  // create 2 data_set
+  var data1 = {a: 9, b: 20, c:30, d:8, e:12}
+  var data2 = {a: 6, b: 16, c:20, d:14, e:19, f:12}
+
+  // set the color scale
+  var color = d3.scaleOrdinal()
+    .domain(["a", "b", "c", "d", "e", "f"])
+    .range(d3.schemeDark2);
+
+  // A function that create / update the plot for a given variable:
+  function update(data) {
+
+    // Compute the position of each group on the pie:
+    var pie = d3.pie()
+      .value(function(d) {return d.value; })
+      .sort(function(a, b) { console.log(a) ; return d3.ascending(a.key, b.key);} ) // This make sure that group order remains the same in the pie chart
+    var data_ready = pie(d3.entries(data))
+
+    // map to data
+    var u = svg.selectAll("path")
+      .data(data_ready)
+
+    // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+    u
+      .enter()
+      .append('path')
+      .merge(u)
+      .transition()
+      .duration(1000)
+      .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius)
+      )
+      .attr('fill', function(d){ return(color(d.data.key)) })
+      .attr("stroke", "white")
+      .style("stroke-width", "2px")
+      .style("opacity", 1)
+
+    // remove the group that is not present anymore
+    u
+      .exit()
+      .remove()
+
+    }
+
+    // Initialize the plot with the first dataset
+    update(data1)
+
+  }
 
 function makeBarchart(data, stadsdeelnaam){
 	// Remove former barchart and title, if existing
@@ -100,23 +174,16 @@ function makeBarchart(data, stadsdeelnaam){
 		values.push(data[stadsdeelnaam][keys[i]]);
 	}
 
-  console.log(values)
-//
-	// // Remove non-index values from both lists
-	// keys.splice(0, 1)
-// 	keys.splice(5, 1)
-	values.splice(7, 1)
-// 	values.splice(5, 1)
-//
-// 	// Adjust keys to fit into barchart label
-// 	for (i in keys){
-// 		keys[i] = keys[i].replace(" Index", "");
-// 	}
-//
+	// // Select wanted elements
+  keys1 = keys.slice(3, 7)
+  values1 = values.slice(3, 7)
+  keys2 = keys.slice(7, 14)
+  values2 = values.slice(7, 14)
+
 	// Define width and height for barchart svg
 	var margin = {top: 20, right: 20, bottom: 50, left: 40},
-			width = 600 - margin.left - margin.right;
-			height = 500 - margin.top - margin.bottom;
+			width = 500 - margin.left - margin.right;
+			height = 300 - margin.top - margin.bottom;
 
 	// Create SVG
 	var svg = d3.select("#barchart")
@@ -142,27 +209,28 @@ function makeBarchart(data, stadsdeelnaam){
 
 // Scale the range of the data in the domains
 // Hardcode y-domain to make it easier to compare barcharts
-	x.domain(keys);
+	x.domain(keys1);
 	y.domain([0, 1]);
-//
-// // Create tooltip element
-//  var tool_tip = d3.tip()
-//      .attr("class", "d3-tip")
-//      .offset([-8, 0])
-//      .html(function(d) { return d; });
-//    svg.call(tool_tip);
+
+// Create tooltip element
+ var tool_tip = d3.tip()
+     .attr("class", "d3-tip")
+     .offset([-8, 0])
+     .html(function(d) { return d; });
+   svg.call(tool_tip);
+
 
 	// Create bars
 	svg.selectAll(".bar")
-		.data(values)
+		.data(values1)
 		.enter().append("rect")
 		.attr("class", "bar")
-		.attr("x", function(d, i) { return x(keys[i]); })
+		.attr("x", function(d, i) { return x(keys1[i]); })
 		.attr("width", x.bandwidth())
 		.attr("y", function(d) { return y(d); })
 		.attr("height", function(d) { return height - y(d) })
-		// .on('mouseover', tool_tip.show)
-		// .on('mouseout', tool_tip.hide);
+		.on('mouseover', tool_tip.show)
+		.on('mouseout', tool_tip.hide);
 
 	// Add x axis
 	svg.append("g")
@@ -182,5 +250,5 @@ function makeBarchart(data, stadsdeelnaam){
       .attr("dy", "1em")
       .style("text-anchor", "middle")
 			.style("font-size", "12px")
-      .text("Index value -->");
+      .text("Percentage -->");
 }

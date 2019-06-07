@@ -46,16 +46,25 @@ body {
   top: 100%;
   left: 0;
 }
-
-/* Set style for barchart svg */
-#barchart {
-	float: right;
+/* Set style for map svg */
+#map {
+	float: left;
 	width: 600px;
 	margin-left: 6px;
 	margin-right: 80px;
 	margin-top: 20px;
 	padding: 20px;
-	background-color: white;
+	box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+}
+
+/* Set style for barchart svg */
+#barchart {
+	float: right;
+	width: 500px;
+	margin-left: 6px;
+	margin-right: 80px;
+	margin-top: 20px;
+	padding: 20px;
 	box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
 }
 
@@ -83,46 +92,9 @@ text {
 .stadsdeel-borders {
   fill: none;
   stroke: black;
-  stroke-width: 4px;
+  stroke-width: 3px;
   stroke-linejoin: round;
   stroke-linecap: round;
   pointer-events: none;
   opacity: 0.3;
-}
-.spoor {
-  fill: none;
-  stroke-linejoin: round;
-}
-.train {
-  stroke: black;
-  stroke-width: 2;
-  opacity: 0.5;
-}
-.tram {
-}
-.metro {
-   stroke-dasharray: 5,1;
-}
-/*Points*/
-.station {
-  fill: #ffb310;
-  r: 4;
-  stroke: #092869;
-  stroke-width: 2;
-  z-index: 3;
-}
-.stationnaam{
-  z-index: 4;
-  fill: black;
-  font-size: x-small;
-  text-anchor: middle;
-}
-.station:hover {
-  stroke: #ffb310;
-}
-.halte {
-  r: 1.5;
-  fill: white;
-  opacity: 0.8;
-  z-index: -1;
 }
