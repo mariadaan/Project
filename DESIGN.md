@@ -71,10 +71,9 @@ In de cirkeldiagram wordt in eerste instantie duidelijk hoe het zit met de eigen
 In de javascript code worden verschillende functies gebruikt om deze functionaliteit te realiseren.
 
 - makeMap
-- makeLegend
 - makeBarchart
 - makePiechart
 
-De eerste en belangrijkste functie is "makeMap". Deze functie wordt gebruikt om de volledige kaart van Amsterdam op de pagina te zetten. De makeLegend functie hoort hierbij, deze is om de kleuren in de kaart te verklaren.
+De eerste en belangrijkste functie is "makeMap". Deze functie wordt gebruikt om de volledige kaart van Amsterdam op de pagina te zetten.
 
 Vervolgens zijn de functies "makeBarchart" en "makePiechart" nodig om de grafieken te maken. Deze functies worden beide aangeroepen op het moment dat de gebruiker een stadsdeel aanklikt.

@@ -26,4 +26,9 @@ Vandaag heb ik de tooltip werkend gekregen en een beginnetje gemaakt met de barc
 Ik twijfel nog of ik de 'hover'kleur per buurt of per stadsdeel moet doen. Nu krijg je de indruk dat de informatie in de tooltip etc wel op buurtniveau is, terwijl dat niet zo is. Maar het is ook wel weer leuk om de buurtnamen te zien en om wel te erkennen dat het verschillende buurten zijn. Morgen tijdens de stand-up maar even bespreken!
 
 ### Dag 5
-Weinig vooruitgang vandaag. Barchart en piechart interactief maken lukt niet, heb dit nog nooit gedaan en op internet kan ik lastig bruikbare dingen vinden. Heb besloten om eerst een normale barchart te maken, kan later nog wel stacked barchart proberen. 
+Weinig vooruitgang vandaag. Barchart en piechart interactief maken lukt niet, heb dit nog nooit gedaan en op internet kan ik lastig bruikbare dingen vinden. Heb besloten om eerst een normale barchart te maken, kan later nog wel stacked barchart proberen.
+
+### Dag 6
+Na standup van vandaag besloten om eerst wat aandacht te besteden aan de algehele setup van de webpagina. Met een bootstrap sample de website vormgegeven en mooier gemaakt.
+
+Gewerkt aan piechart, besloten een dropdown-menu te gebruiken in plaats van buttons zodat het overzichtelijker is als er meer dan 2 opties zijn. 
