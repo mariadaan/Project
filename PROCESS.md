@@ -31,4 +31,7 @@ Weinig vooruitgang vandaag. Barchart en piechart interactief maken lukt niet, he
 ### Dag 6
 Na standup van vandaag besloten om eerst wat aandacht te besteden aan de algehele setup van de webpagina. Met een bootstrap sample de website vormgegeven en mooier gemaakt.
 
-Gewerkt aan piechart, besloten een dropdown-menu te gebruiken in plaats van buttons zodat het overzichtelijker is als er meer dan 2 opties zijn. 
+Gewerkt aan piechart, besloten een dropdown-menu te gebruiken in plaats van buttons zodat het overzichtelijker is als er meer dan 2 opties zijn.
+
+## Dag 7
+Ik heb besloten om nog even te wachten met de hover veranderen van buurt naar stadsdeel, omdat ik het misschien nog wel toch per buurt wil doen als dat lukt met de data. 

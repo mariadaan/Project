@@ -8,8 +8,21 @@ Promise.all(requests).then(function(res) {
     throw(e);
     });
 
+function percentageFormat(number){
+  number = String(Math.round((number) * 100))
+  percentage = number + "%"
+  return percentage
+}
+
 function makeMap(buurtdata, data){
-  var stadsdeel = {"A": "Centrum","B": "Nieuw-West", "E": "West", "M": "Oost", "K": "Zuid", "F": "Nieuw-West", "N": "Noord", "T": "Zuidoost"}
+  var stadsdeel = {"A": "Centrum",
+                  "B": "Nieuw-West",
+                  "E": "West",
+                  "M": "Oost",
+                  "K": "Zuid",
+                  "F": "Nieuw-West",
+                  "N": "Noord",
+                  "T": "Zuidoost"}
 
   var margin = {top: 40, right: 40, bottom: 40, left: 40};
 
@@ -38,6 +51,12 @@ function makeMap(buurtdata, data){
     .attr("font-weight", "bold")
     .text("Huurklasse");
 
+  svg.append("text")
+    .attr("x", 0)
+    .attr("y", 40)
+    .attr("font-size", "medium")
+    .text("Beweeg muis over de kaart voor meer informatie");
+
   var y0 = 30;
   var spacingy = 20
   var x0 = 5
@@ -53,7 +72,7 @@ function makeMap(buurtdata, data){
       .offset([-8, 0])
       .html(function(d) {
         stadsdeelnaam = stadsdeel[d.properties.Stadsdeel_code]
-        return stadsdeelnaam + " (" + d.properties.Buurtcombinatie + ")" + "<br>" + data[stadsdeelnaam]['< 425'];
+        return stadsdeelnaam + " (" + d.properties.Buurtcombinatie + ")" + "<br>" + percentageFormat(data[stadsdeelnaam]['< 425']);
       });
     svg.call(tool_tip);
 
@@ -76,7 +95,7 @@ function makeMap(buurtdata, data){
 
   var color = d3.scaleLinear()
   .domain([25, 60])
-  .range(["rgba(102,0,0,0.4)", "rgba(102,0,0,1)"]);
+  .range(["white", "RebeccaPurple "]);
 
 	// Make map interactive
 	svg.selectAll(".buurt")
@@ -92,8 +111,11 @@ function makeMap(buurtdata, data){
 };
 
 function makePiechart(data, stadsdeelnaam){
+  // initialize the plot with the first dataset
+  var selected = data1
+
   // Remove former piechart and title, if existing
-  d3.select("#piechart").select("svg").remove();
+  d3.select("#piechart").selectAll("*").remove();
 
   // set the dimensions and margins of the graph
   var width = 450
@@ -111,17 +133,21 @@ function makePiechart(data, stadsdeelnaam){
               .append("g")
               .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+  // create dropdown element
   var dropdown = d3.select("#piechart")
                     .insert("select", "svg")
-                    .on("change", function(d) {
+                    .on("change", function(d){
+                      selected = dropdown.select("option").node().value;
+                      // console.log(selected);
                       update(data2)
-                    })
+                      })
 
+  // give options to dropdown
   dropdown.selectAll("option")
-      .data(["data1", "data2"])
+      .data(["data1", "data2", "data3"])
       .enter().append("option")
-      .text(function (d) { return d; })
-
+      .text(function (d) {
+        return d; })
 
 
    // Create list of all keys and all values
@@ -131,28 +157,31 @@ function makePiechart(data, stadsdeelnaam){
  		values.push(data[stadsdeelnaam][keys[i]]);
  	}
 
+  // console.log(Object(data[stadsdeelnaam]))
+
   // Select wanted elements
   keys1 = keys.slice(0, 3)
   values1 = values.slice(0, 3)
-  keys2 = keys.slice(12, 18)
-  values2 = values.slice(12, 18)
+  keys2 = keys.slice(14, 20)
+  values2 = values.slice(14, 20)
+  keys3 = keys.slice(20, 26)
+  values3 = values.slice(20, 26)
 
-  var data1 = {}; // create an empty dict
+  var data1 = {};
   for (i = 0; i < keys1.length; i++) {
     data1[String(keys1[i])] = values1[i];
   }
-  console.log(data1)
 
-  var data2 = {}; // create an empty dict
+  var data2 = {};
   for (i = 0; i < keys2.length; i++) {
     data2[String(keys2[i])] = values2[i];
   }
   console.log(data2)
 
-  // create 2 data_set
-
-  // var data1 = {a: 9, b: 20, c:30, d:8, e:12}
-  // var data2 = {a: 6, b: 16, c:20, d:14, e:19, f:12}
+  var data3 = {};
+  for (i = 0; i < keys3.length; i++) {
+    data3[String(keys3[i])] = values3[i];
+  }
 
   // set the color scale
   var color = d3.scaleOrdinal()
@@ -165,8 +194,17 @@ function makePiechart(data, stadsdeelnaam){
     // Compute the position of each group on the pie:
     var pie = d3.pie()
       .value(function(d) {return d.value; })
-      .sort(function(a, b) { return d3.ascending(a.key, b.key);} ) // This make sure that group order remains the same in the pie chart
+      .sort(function(a, b) { console.log(a) ; return d3.ascending(a.key, b.key);} )
     var data_ready = pie(d3.entries(data))
+
+    // Create tooltip element
+     var tool_tip = d3.tip()
+         .attr("class", "d3-tip")
+         .html(function(d) {
+           key = d.data.key
+           value = d.data.value
+           return key + ": " + percentageFormat(value); });
+       svg.call(tool_tip);
 
     // map to data
     var u = svg.selectAll("path")
@@ -186,7 +224,11 @@ function makePiechart(data, stadsdeelnaam){
       .attr('fill', function(d){ return(color(d.data.key)) })
       .attr("stroke", "white")
       .style("stroke-width", "2px")
-      .style("opacity", 1)
+      .style("opacity", 1);
+
+    svg.selectAll("path")
+      .on('mouseover', tool_tip.show)
+  		.on('mouseout', tool_tip.hide);
 
     // remove the group that is not present anymore
     u
@@ -194,16 +236,18 @@ function makePiechart(data, stadsdeelnaam){
       .remove()
 
     }
+    // initialize the plot with the first dataset
+    var selected = data1
 
     // Initialize the plot with the first dataset
-    update(data1)
+    update(selected)
 
   }
 
 function makeBarchart(data, stadsdeelnaam){
 	// Remove former barchart and title, if existing
 	d3.select("#barchart").select("svg").remove();
-	d3.select("#titlebars").select("h1").remove();
+	d3.select("#titlebars").select("h2").remove();
 
 	// Create list of all keys and all values
 	keys = Object.keys(data[stadsdeelnaam])
@@ -233,6 +277,23 @@ function makeBarchart(data, stadsdeelnaam){
     		.attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
+  // create button element
+  var button = d3.select("#barchart")
+                    .insert("button", "svg")
+                    .data("data1")
+                    .on("click", function(d){
+                      selected = button.select("option").node().value;
+                      console.log(selected);
+                      })
+
+  // give options to dropdown
+  button.selectAll("option")
+      .data(["data1", "data2"])
+      .enter().append("option")
+      .text(function (d) {
+        console.log(d)
+        return d; })
+
 	// Show title
 	d3.select("#titlebars")
 		.append("h2")
@@ -254,7 +315,7 @@ function makeBarchart(data, stadsdeelnaam){
  var tool_tip = d3.tip()
      .attr("class", "d3-tip")
      .offset([-8, 0])
-     .html(function(d) { return d; });
+     .html(function(d) { return percentageFormat(d); });
    svg.call(tool_tip);
 
 
