@@ -34,4 +34,6 @@ Na standup van vandaag besloten om eerst wat aandacht te besteden aan de algehel
 Gewerkt aan piechart, besloten een dropdown-menu te gebruiken in plaats van buttons zodat het overzichtelijker is als er meer dan 2 opties zijn.
 
 ## Dag 7
-Ik heb besloten om nog even te wachten met de hover veranderen van buurt naar stadsdeel, omdat ik het misschien nog wel toch per buurt wil doen als dat lukt met de data. 
+Ik heb besloten om nog even te wachten met de hover veranderen van buurt naar stadsdeel, omdat ik het misschien nog wel toch per buurt wil doen als dat lukt met de data. Ben er wel achter gekomen dat de data die ik gebruik niet uit 2017 maar uit 2013 komt. Heel kut, maar ben nu te ver om dat nog te veranderen dus ik hou het bij deze data. Het is wel interessant om te beseffen hoeveel er in die 6 jaar tijd is veranderd in Amsterdam.
+
+Piechart eindelijk gefixt en code opgeschoond. Lang met zelfde problemen gestruggled doordat de assistentie 3 uur(!!!) op zich liet wachten. 

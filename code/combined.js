@@ -8,11 +8,13 @@ Promise.all(requests).then(function(res) {
     throw(e);
     });
 
+// Convert float values to percentage format string
 function percentageFormat(number){
   number = String(Math.round((number) * 100))
   percentage = number + "%"
   return percentage
 }
+
 
 function makeMap(buurtdata, data){
   var stadsdeel = {"A": "Centrum",
@@ -43,6 +45,7 @@ function makeMap(buurtdata, data){
   var path = d3.geoPath()
     .projection(projection);
 
+  // Map title
   svg.append("text")
     .attr("x", 0)
     .attr("y", 15)
@@ -62,7 +65,7 @@ function makeMap(buurtdata, data){
   var x0 = 5
   var spacingx = 55
 
-  /* Areas */
+  // Create stadsdelen
   var stadsdelen = topojson.feature(buurtdata, buurtdata.objects.buurten).features;
   var stadsdeelnaam = ""
 
@@ -93,6 +96,7 @@ function makeMap(buurtdata, data){
         return stadsdeel[a.properties.Stadsdeel_code] !== stadsdeel[b.properties.Stadsdeel_code];
         })));
 
+  // Give map a color range
   var color = d3.scaleLinear()
   .domain([25, 60])
   .range(["white", "RebeccaPurple "]);
@@ -101,6 +105,7 @@ function makeMap(buurtdata, data){
 	svg.selectAll(".buurt")
 	   .attr("stroke", "rgba(0, 0, 0, 0.3)")
      .attr('fill',function(d, i) {
+       // Make colour depending on value
        return color(parseInt((data[stadsdeel[d.properties.Stadsdeel_code]]['< 425']) * 100)); })
      .on("click", function(d){
        makeBarchart(data, stadsdeelnaam)
@@ -111,44 +116,24 @@ function makeMap(buurtdata, data){
 };
 
 function makePiechart(data, stadsdeelnaam){
-  // initialize the plot with the first dataset
-  var selected = data1
-
   // Remove former piechart and title, if existing
   d3.select("#piechart").selectAll("*").remove();
 
-  // set the dimensions and margins of the graph
-  var width = 450
-      height = 450
-      margin = 40
+  // Set the dimensions and margins of the graph
+  var width = 300
+      height = 300
+      margin = 20
 
-  // The radius of the pieplot is half the width or half the height (smallest one). I substract a bit of margin.
+  // The radius of the pieplot is half the width or half the height (smallest one). Substract a bit of margin.
   var radius = Math.min(width, height) / 2 - margin
 
-  // append the svg object to the div called 'piechart'
+  // Append the svg object to the div called 'piechart'
   var svg = d3.select("#piechart")
               .append("svg")
               .attr("width", width)
               .attr("height", height)
               .append("g")
               .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-  // create dropdown element
-  var dropdown = d3.select("#piechart")
-                    .insert("select", "svg")
-                    .on("change", function(d){
-                      selected = dropdown.select("option").node().value;
-                      // console.log(selected);
-                      update(data2)
-                      })
-
-  // give options to dropdown
-  dropdown.selectAll("option")
-      .data(["data1", "data2", "data3"])
-      .enter().append("option")
-      .text(function (d) {
-        return d; })
-
 
    // Create list of all keys and all values
  	keys = Object.keys(data[stadsdeelnaam])
@@ -159,34 +144,58 @@ function makePiechart(data, stadsdeelnaam){
 
   // console.log(Object(data[stadsdeelnaam]))
 
+  function selectElements(keys, values){
+    var data = {};
+    for (i = 0; i < keys.length; i++) {
+      data[String(keys[i])] = values[i];
+    }
+    return data
+  }
+
   // Select wanted elements
   keys1 = keys.slice(0, 3)
   values1 = values.slice(0, 3)
-  keys2 = keys.slice(14, 20)
-  values2 = values.slice(14, 20)
-  keys3 = keys.slice(20, 26)
-  values3 = values.slice(20, 26)
+  keys2 = keys.slice(8,14)
+  values2 = values.slice(8,14)
+  keys3 = keys.slice(14, 20)
+  values3 = values.slice(14, 20)
+  keys4 = keys.slice(20, 26)
+  values4 = values.slice(20, 26)
+  keys5 = keys.slice(26, 30)
+  values5 = values.slice(26, 30)
 
-  var data1 = {};
-  for (i = 0; i < keys1.length; i++) {
-    data1[String(keys1[i])] = values1[i];
-  }
+  // Create dictionaries for each category
+  var eigendomscategorie = selectElements(keys1, values1)
+  var inkomensgroepen = selectElements(keys2, values5)
+  var woonsituatie = selectElements(keys3, values2)
+  var leeftijdsgroep = selectElements(keys4, values3)
+  var opleidingsniveau = selectElements(keys5, values4)
 
-  var data2 = {};
-  for (i = 0; i < keys2.length; i++) {
-    data2[String(keys2[i])] = values2[i];
-  }
-  console.log(data2)
+  // Connect dropdown menu options to actual data
+  all_data = {"Eigendomscategorie": eigendomscategorie,
+              "Inkomensgroepen": inkomensgroepen,
+              "Woonsituatie": woonsituatie,
+              "Leeftijdsgroep": leeftijdsgroep,
+              "Opleidingsniveau": opleidingsniveau}
 
-  var data3 = {};
-  for (i = 0; i < keys3.length; i++) {
-    data3[String(keys3[i])] = values3[i];
-  }
+  // Create dropdown element
+  var dropdown = d3.select("#piechart")
+                    .insert("select", "svg")
+                    .on("change", function(d){
+                      update(all_data[this.value])
+                      })
+
+  // Give options to dropdown
+  dropdown.selectAll("option")
+      .data(["Eigendomscategorie", "Inkomensgroepen", "Woonsituatie", "Leeftijdsgroep", "Opleidingsniveau"])
+      .enter().append("option")
+      .text(function (d) {
+        return d; })
 
   // set the color scale
   var color = d3.scaleOrdinal()
     .domain(["a", "b", "c", "d", "e", "f"])
-    .range(d3.schemeDark2);
+    .range(d3.schemePaired);
 
   // A function that create / update the plot for a given variable:
   function update(data) {
@@ -194,7 +203,9 @@ function makePiechart(data, stadsdeelnaam){
     // Compute the position of each group on the pie:
     var pie = d3.pie()
       .value(function(d) {return d.value; })
-      .sort(function(a, b) { console.log(a) ; return d3.ascending(a.key, b.key);} )
+      .sort(function(a, b) {
+          // Keep same order
+         return d3.ascending(a.key, b.key);} )
     var data_ready = pie(d3.entries(data))
 
     // Create tooltip element
@@ -236,11 +247,9 @@ function makePiechart(data, stadsdeelnaam){
       .remove()
 
     }
-    // initialize the plot with the first dataset
-    var selected = data1
 
     // Initialize the plot with the first dataset
-    update(selected)
+    update(eigendomscategorie)
 
   }
 
@@ -297,7 +306,7 @@ function makeBarchart(data, stadsdeelnaam){
 	// Show title
 	d3.select("#titlebars")
 		.append("h2")
-		.text(stadsdeelnaam + ", 2017")
+		.text(stadsdeelnaam + ", 2013")
 
 	// Set the ranges
 	var x = d3.scaleBand()
