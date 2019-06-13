@@ -36,4 +36,9 @@ Gewerkt aan piechart, besloten een dropdown-menu te gebruiken in plaats van butt
 ## Dag 7
 Ik heb besloten om nog even te wachten met de hover veranderen van buurt naar stadsdeel, omdat ik het misschien nog wel toch per buurt wil doen als dat lukt met de data. Ben er wel achter gekomen dat de data die ik gebruik niet uit 2017 maar uit 2013 komt. Heel kut, maar ben nu te ver om dat nog te veranderen dus ik hou het bij deze data. Het is wel interessant om te beseffen hoeveel er in die 6 jaar tijd is veranderd in Amsterdam.
 
-Piechart eindelijk gefixt en code opgeschoond. Lang met zelfde problemen gestruggled doordat de assistentie 3 uur(!!!) op zich liet wachten. 
+Piechart eindelijk gefixt en code opgeschoond. Lang met zelfde problemen gestruggled doordat de assistentie 3 uur(!!!) op zich liet wachten.
+
+## Dag 8
+Besloten alle elementen al op de pagina te zetten voordat er ergens op wordt geklikt, dit oogt netter. En dan heb je ook als eerste een overzicht van de situatie in heel Amsterdam. Gezorgd voor een interactieve barchart in plaats van een stacked barchart. Met behulp van 2 buttons kan je nu schaken tussen de datasets, dit ziet er overzichtelijk uit en de data is nog steeds goed te vergelijken.
+
+Ik heb de data per buurt ook in de Excel sheet gezet. Dit is alleen beschikbaar voor sheet 1 en 2. De kleur van de kaart kan ik nu dus per buurt doen in plaats van per stadsdeel dus dat is top. Er zijn een paar buurten die nog niet bestaan in 2013, dus daar is geen data van. Ik twijfel of ik die buurten grijs moet maken of de data van het hele stadsdeel mee moet geven. Morgen tijdens de standup ga ik dat wel even bespreken.
