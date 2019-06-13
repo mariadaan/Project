@@ -3,6 +3,7 @@
 // Load in data
 var requests = [d3.json("buurten.json"), d3.json("database.json")];
 Promise.all(requests).then(function(res) {
+    // Initialize page with all elements
     makeMap(res[0], res[1])
 }).catch(function(e){
     throw(e);
@@ -113,7 +114,17 @@ function makeMap(buurtdata, data){
         })
 		 .on('mouseover', tool_tip.show)
      .on('mouseout', tool_tip.hide)
+
+  // Draw all initial charts
+  initialPage(data)
 };
+
+// Initialize page with all elements
+function initialPage(data){
+  stadsdeelnaam = "Amsterdam"
+  makeBarchart(data, stadsdeelnaam)
+  makePiechart(data, stadsdeelnaam)
+}
 
 function makePiechart(data, stadsdeelnaam){
   // Remove former piechart and title, if existing
@@ -142,8 +153,6 @@ function makePiechart(data, stadsdeelnaam){
  		values.push(data[stadsdeelnaam][keys[i]]);
  	}
 
-  // console.log(Object(data[stadsdeelnaam]))
-
   function selectElements(keys, values){
     var data = {};
     for (i = 0; i < keys.length; i++) {
@@ -166,10 +175,10 @@ function makePiechart(data, stadsdeelnaam){
 
   // Create dictionaries for each category
   var eigendomscategorie = selectElements(keys1, values1)
-  var inkomensgroepen = selectElements(keys2, values5)
-  var woonsituatie = selectElements(keys3, values2)
-  var leeftijdsgroep = selectElements(keys4, values3)
-  var opleidingsniveau = selectElements(keys5, values4)
+  var inkomensgroepen = selectElements(keys2, values2)
+  var woonsituatie = selectElements(keys3, values3)
+  var leeftijdsgroep = selectElements(keys4, values4)
+  var opleidingsniveau = selectElements(keys5, values5)
 
   // Connect dropdown menu options to actual data
   all_data = {"Eigendomscategorie": eigendomscategorie,
@@ -194,7 +203,7 @@ function makePiechart(data, stadsdeelnaam){
 
   // set the color scale
   var color = d3.scaleOrdinal()
-    .domain(["a", "b", "c", "d", "e", "f"])
+    .domain(keys)
     .range(d3.schemePaired);
 
   // A function that create / update the plot for a given variable:
@@ -202,10 +211,11 @@ function makePiechart(data, stadsdeelnaam){
 
     // Compute the position of each group on the pie:
     var pie = d3.pie()
-      .value(function(d) {return d.value; })
-      .sort(function(a, b) {
-          // Keep same order
-         return d3.ascending(a.key, b.key);} )
+      .value(function(d) {return d.value; });
+      // .sort(function(a, b) {
+      //     // Keep same order
+      //    return d3.ascending(a.key, b.key);} )
+
     var data_ready = pie(d3.entries(data))
 
     // Create tooltip element
@@ -245,7 +255,6 @@ function makePiechart(data, stadsdeelnaam){
     u
       .exit()
       .remove()
-
     }
 
     // Initialize the plot with the first dataset
@@ -265,98 +274,102 @@ function makeBarchart(data, stadsdeelnaam){
 		values.push(data[stadsdeelnaam][keys[i]]);
 	}
 
-	// // Select wanted elements
-  keys1 = keys.slice(3, 7)
-  values1 = values.slice(3, 7)
-  keys2 = keys.slice(7, 14)
-  values2 = values.slice(7, 14)
+	// Select wanted elements
+  var keys1 = keys.slice(3, 7)
+  var values1 = values.slice(3, 7)
+  var keys2 = keys.slice(8, 14)
+  var values2 = values.slice(8, 14)
 
-	// Define width and height for barchart svg
-	var margin = {top: 20, right: 20, bottom: 50, left: 40},
-			width = 500 - margin.left - margin.right;
-			height = 300 - margin.top - margin.bottom;
+  // Initialize chart
+  create(keys1, values1)
 
-	// Create SVG
-	var svg = d3.select("#barchart")
-				.append("svg")
-				.attr("id", "bars")
-				.attr("width", width + margin.left + margin.right)
-				.attr("height", height + margin.top + margin.bottom)
-				.append("g")
-    		.attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-
-  // create button element
-  var button = d3.select("#barchart")
-                    .insert("button", "svg")
-                    .data("data1")
+  // Button element
+  var button1 = d3.select("#Huurvoorraad")
                     .on("click", function(d){
-                      selected = button.select("option").node().value;
-                      console.log(selected);
+                      create(keys1, values1)
                       })
 
-  // give options to dropdown
-  button.selectAll("option")
-      .data(["data1", "data2"])
-      .enter().append("option")
-      .text(function (d) {
-        console.log(d)
-        return d; })
+  // Button element
+  var button2 = d3.select("#Inkomensgroepen")
+                    .on("click", function(d){
+                      create(keys2, values2);
+                      })
 
-	// Show title
-	d3.select("#titlebars")
-		.append("h2")
-		.text(stadsdeelnaam + ", 2013")
+  function create(keys, values){
+    // Remove former barchart and title, if existing
+    d3.select("#barchart").select("svg").remove();
+    d3.select("#titlebars").select("h2").remove();
 
-	// Set the ranges
-	var x = d3.scaleBand()
-	          .range([0, width])
-	          .padding(0.1);
-	var y = d3.scaleLinear()
-	          .range([height, 0]);
+  	// Define width and height for barchart svg
+  	var margin = {top: 20, right: 30, bottom: 20, left: 40},
+  			width = 500 - margin.left - margin.right;
+  			height = 300 - margin.top - margin.bottom;
 
-// Scale the range of the data in the domains
-// Hardcode y-domain to make it easier to compare barcharts
-	x.domain(keys1);
-	y.domain([0, 1]);
+  	// Create SVG
+  	var svg = d3.select("#barchart")
+  				.append("svg")
+  				.attr("id", "bars")
+  				.attr("width", width + margin.left + margin.right)
+  				.attr("height", height + margin.top + margin.bottom)
+  				.append("g")
+      		.attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
 
-// Create tooltip element
- var tool_tip = d3.tip()
-     .attr("class", "d3-tip")
-     .offset([-8, 0])
-     .html(function(d) { return percentageFormat(d); });
-   svg.call(tool_tip);
+  	// Show title
+  	d3.select("#titlebars")
+  		.append("h2")
+  		.text(stadsdeelnaam + ", 2013")
+
+  	// Set the ranges
+  	var x = d3.scaleBand()
+  	          .range([0, width])
+  	          .padding(0.1);
+  	var y = d3.scaleLinear()
+  	          .range([height, 0]);
+
+  // Scale the range of the data in the domains
+  // Hardcode y-domain to make it easier to compare barcharts
+  	x.domain(keys);
+  	y.domain([0, 1]);
+
+  // Create tooltip element
+   var tool_tip = d3.tip()
+       .attr("class", "d3-tip")
+       .offset([-8, 0])
+       .html(function(d) { return percentageFormat(d); });
+     svg.call(tool_tip);
 
 
-	// Create bars
-	svg.selectAll(".bar")
-		.data(values1)
-		.enter().append("rect")
-		.attr("class", "bar")
-		.attr("x", function(d, i) { return x(keys1[i]); })
-		.attr("width", x.bandwidth())
-		.attr("y", function(d) { return y(d); })
-		.attr("height", function(d) { return height - y(d) })
-		.on('mouseover', tool_tip.show)
-		.on('mouseout', tool_tip.hide);
+  	// Create bars
+  	svg.selectAll(".bar")
+  		.data(values)
+  		.enter().append("rect")
+  		.attr("class", "bar")
+  		.attr("x", function(d, i) { return x(keys[i]); })
+  		.attr("width", x.bandwidth())
+  		.attr("y", function(d) { return y(d); })
+  		.attr("height", function(d) { return height - y(d) })
+  		.on('mouseover', tool_tip.show)
+  		.on('mouseout', tool_tip.hide);
 
-	// Add x axis
-	svg.append("g")
-				.attr("transform", "translate(0," + height + ")")
-				.call(d3.axisBottom(x))
-				.style("font-size", "8px");
+  	// Add x axis
+  	svg.append("g")
+  				.attr("transform", "translate(0," + height + ")")
+  				.call(d3.axisBottom(x))
+  				.style("font-size", "8px");
 
-	// Add y axis
-	svg.append("g")
-		.call(d3.axisLeft(y));
+  	// Add y axis
+  	svg.append("g")
+  		.call(d3.axisLeft(y));
 
-	// Add text label for the y axis
-  svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x", -60)
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-			.style("font-size", "12px")
-      .text("Percentage -->");
+  	// Add text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", -60)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+  			.style("font-size", "12px")
+        .text("Percentage -->");
+  }
 }
