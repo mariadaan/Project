@@ -5,6 +5,7 @@ var requests = [d3.json("buurten.json"), d3.json("database.json")];
 Promise.all(requests).then(function(res) {
     // Initialize page with all elements
     makeMap(res[0], res[1])
+    console.log(res[1])
 }).catch(function(e){
     throw(e);
     });
@@ -15,7 +16,6 @@ function percentageFormat(number){
   percentage = number + "%"
   return percentage
 }
-
 
 function makeMap(buurtdata, data){
   var stadsdeel = {"A": "Centrum",
@@ -69,6 +69,7 @@ function makeMap(buurtdata, data){
   // Create stadsdelen
   var stadsdelen = topojson.feature(buurtdata, buurtdata.objects.buurten).features;
   var stadsdeelnaam = ""
+  var buurtcode = ""
 
   // Create tooltip element
   var tool_tip = d3.tip()
@@ -76,7 +77,10 @@ function makeMap(buurtdata, data){
       .offset([-8, 0])
       .html(function(d) {
         stadsdeelnaam = stadsdeel[d.properties.Stadsdeel_code]
-        return stadsdeelnaam + " (" + d.properties.Buurtcombinatie + ")" + "<br>" + percentageFormat(data[stadsdeelnaam]['< 425']);
+        // Als buurtdata niet beschikbaar is, stadsdeeldata gebruiken of grijs maken?
+        buurtcode = d.properties.Buurtcombinatie_code
+        console.log(buurtcode)
+        return stadsdeelnaam + " (" + d.properties.Buurtcombinatie + ")" + "<br>" + percentageFormat(data[buurtcode]['< 425']);
       });
     svg.call(tool_tip);
 
@@ -109,6 +113,9 @@ function makeMap(buurtdata, data){
        // Make colour depending on value
        return color(parseInt((data[stadsdeel[d.properties.Stadsdeel_code]]['< 425']) * 100)); })
      .on("click", function(d){
+       console.log(d.properties.Buurtcombinatie_code)
+       console.log(data)
+       // console.log(data[d.properties.Buurtcombinatie_code]['< 425'])
        makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
         })
@@ -118,6 +125,11 @@ function makeMap(buurtdata, data){
   // Draw all initial charts
   initialPage(data)
 };
+
+function buurtNaam(data, buurt){
+  console.log(data)
+  console.log(buurt)
+}
 
 // Initialize page with all elements
 function initialPage(data){
@@ -301,7 +313,7 @@ function makeBarchart(data, stadsdeelnaam){
     d3.select("#titlebars").select("h2").remove();
 
   	// Define width and height for barchart svg
-  	var margin = {top: 20, right: 30, bottom: 20, left: 40},
+  	var margin = {top: 20, right: 30, bottom: 20, left: 50},
   			width = 500 - margin.left - margin.right;
   			height = 300 - margin.top - margin.bottom;
 
@@ -330,7 +342,7 @@ function makeBarchart(data, stadsdeelnaam){
   // Scale the range of the data in the domains
   // Hardcode y-domain to make it easier to compare barcharts
   	x.domain(keys);
-  	y.domain([0, 1]);
+  	y.domain([0, 0.7]);
 
   // Create tooltip element
    var tool_tip = d3.tip()
@@ -366,7 +378,7 @@ function makeBarchart(data, stadsdeelnaam){
     svg.append("text")
         .attr("transform", "rotate(-90)")
         .attr("y", 0 - margin.left)
-        .attr("x", -60)
+        .attr("x", -70)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
   			.style("font-size", "12px")
