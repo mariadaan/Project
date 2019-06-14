@@ -53,7 +53,7 @@ function makeMap(buurtdata, data){
     .attr("font-size", "large")
     .attr("text-decoration", "underline")
     .attr("font-weight", "bold")
-    .text("Huurklasse");
+    .text("Huurklasse: percentage woningen van minder dan €425 p.m.");
 
   svg.append("text")
     .attr("x", 0)
@@ -79,8 +79,12 @@ function makeMap(buurtdata, data){
         stadsdeelnaam = stadsdeel[d.properties.Stadsdeel_code]
         // Als buurtdata niet beschikbaar is, stadsdeeldata gebruiken of grijs maken?
         buurtcode = d.properties.Buurtcombinatie_code
-        console.log(buurtcode)
-        return stadsdeelnaam + " (" + d.properties.Buurtcombinatie + ")" + "<br>" + percentageFormat(data[buurtcode]['< 425']);
+        if (typeof data[d.properties.Buurtcombinatie_code] !== 'undefined') {
+          return d.properties.Buurtcombinatie + " (" + stadsdeelnaam + ")" + "<br>" + percentageFormat(data[buurtcode]['< 425'])
+        }
+        else{
+          return d.properties.Buurtcombinatie
+        }
       });
     svg.call(tool_tip);
 
@@ -103,19 +107,28 @@ function makeMap(buurtdata, data){
 
   // Give map a color range
   var color = d3.scaleLinear()
-  .domain([25, 60])
+  .domain([0, 60])
   .range(["white", "RebeccaPurple "]);
+
+  var waarde = 0
 
 	// Make map interactive
 	svg.selectAll(".buurt")
 	   .attr("stroke", "rgba(0, 0, 0, 0.3)")
      .attr('fill',function(d, i) {
        // Make colour depending on value
-       return color(parseInt((data[stadsdeel[d.properties.Stadsdeel_code]]['< 425']) * 100)); })
+       if (typeof data[d.properties.Buurtcombinatie_code] !== 'undefined') {
+           // the variable is defined
+           console.log(data[d.properties.Buurtcombinatie_code])
+           waarde = data[d.properties.Buurtcombinatie_code]['< 425']
+       }
+       else{
+         waarde = 10
+       }
+       return color(parseInt(waarde * 100)); })
      .on("click", function(d){
-       console.log(d.properties.Buurtcombinatie_code)
-       console.log(data)
-       // console.log(data[d.properties.Buurtcombinatie_code]['< 425'])
+       console.log([d.properties.Buurtcombinatie])
+       console.log([d.properties.Buurtcombinatie_code])
        makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
         })

@@ -42,3 +42,6 @@ Piechart eindelijk gefixt en code opgeschoond. Lang met zelfde problemen gestrug
 Besloten alle elementen al op de pagina te zetten voordat er ergens op wordt geklikt, dit oogt netter. En dan heb je ook als eerste een overzicht van de situatie in heel Amsterdam. Gezorgd voor een interactieve barchart in plaats van een stacked barchart. Met behulp van 2 buttons kan je nu schaken tussen de datasets, dit ziet er overzichtelijk uit en de data is nog steeds goed te vergelijken.
 
 Ik heb de data per buurt ook in de Excel sheet gezet. Dit is alleen beschikbaar voor sheet 1 en 2. De kleur van de kaart kan ik nu dus per buurt doen in plaats van per stadsdeel dus dat is top. Er zijn een paar buurten die nog niet bestaan in 2013, dus daar is geen data van. Ik twijfel of ik die buurten grijs moet maken of de data van het hele stadsdeel mee moet geven. Morgen tijdens de standup ga ik dat wel even bespreken.
+
+## Dag 9
+Met behulp van file:///Users/mariadaan/Downloads/wia_2013-_stadsdeelprofielen.pdf pagina 109 uit kunnen vinden welke data van mij overeenkomt met welke missende buurtcombinaties op de kaart. Data hierop aangepast zodat er van elke buurt informatie is. 
