@@ -273,6 +273,7 @@ function makePiechart(data, stadsdeelnaam){
       .exit()
       .remove()
 
+    d3.select("#piechart").selectAll("#legendaa").remove();
 
     var legend = d3.legendColor()
     .scale(color)
@@ -291,8 +292,6 @@ function makePiechart(data, stadsdeelnaam){
     .attr("transform", "translate(150,-110)")
     .call(legend);
     }
-
-    d3.select("#piechart").select("svg").select("g").selectAll("legenda").remove();
 
     // Initialize the plot with the first dataset
     update(eigendomscategorie)

@@ -44,4 +44,6 @@ Besloten alle elementen al op de pagina te zetten voordat er ergens op wordt gek
 Ik heb de data per buurt ook in de Excel sheet gezet. Dit is alleen beschikbaar voor sheet 1 en 2. De kleur van de kaart kan ik nu dus per buurt doen in plaats van per stadsdeel dus dat is top. Er zijn een paar buurten die nog niet bestaan in 2013, dus daar is geen data van. Ik twijfel of ik die buurten grijs moet maken of de data van het hele stadsdeel mee moet geven. Morgen tijdens de standup ga ik dat wel even bespreken.
 
 ## Dag 9
-Met behulp van file:///Users/mariadaan/Downloads/wia_2013-_stadsdeelprofielen.pdf pagina 109 uit kunnen vinden welke data van mij overeenkomt met welke missende buurtcombinaties op de kaart. Data hierop aangepast zodat er van elke buurt informatie is. 
+Met behulp van file:///Users/mariadaan/Downloads/wia_2013-_stadsdeelprofielen.pdf pagina 109 uit kunnen vinden welke data van mij overeenkomt met welke missende buurtcombinaties op de kaart. Data hierop aangepast zodat er van elke buurt informatie is.
+
+Legenda toegevoegd aan cirkeldiagram om het overzichtelijker te maken. Ik moet nog wel iets bedenken om het duidelijker te maken dat de informatie in de charts per stadsdeel en niet per buurt is.
