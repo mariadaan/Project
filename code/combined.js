@@ -5,7 +5,6 @@ var requests = [d3.json("buurten.json"), d3.json("database.json")];
 Promise.all(requests).then(function(res) {
     // Initialize page with all elements
     makeMap(res[0], res[1])
-    console.log(res[1])
 }).catch(function(e){
     throw(e);
     });
@@ -119,7 +118,6 @@ function makeMap(buurtdata, data){
        // Make colour depending on value
        if (typeof data[d.properties.Buurtcombinatie_code] !== 'undefined') {
            // the variable is defined
-           console.log(data[d.properties.Buurtcombinatie_code])
            waarde = data[d.properties.Buurtcombinatie_code]['< 425']
        }
        else{
@@ -127,8 +125,6 @@ function makeMap(buurtdata, data){
        }
        return color(parseInt(waarde * 100)); })
      .on("click", function(d){
-       console.log([d.properties.Buurtcombinatie])
-       console.log([d.properties.Buurtcombinatie_code])
        makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
         })
@@ -138,11 +134,6 @@ function makeMap(buurtdata, data){
   // Draw all initial charts
   initialPage(data)
 };
-
-function buurtNaam(data, buurt){
-  console.log(data)
-  console.log(buurt)
-}
 
 // Initialize page with all elements
 function initialPage(data){
@@ -156,7 +147,7 @@ function makePiechart(data, stadsdeelnaam){
   d3.select("#piechart").selectAll("*").remove();
 
   // Set the dimensions and margins of the graph
-  var width = 300
+  var width = 600
       height = 300
       margin = 20
 
@@ -167,7 +158,7 @@ function makePiechart(data, stadsdeelnaam){
   var svg = d3.select("#piechart")
               .append("svg")
               .attr("width", width)
-              .attr("height", height)
+      				.attr("height", height)
               .append("g")
               .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
@@ -233,6 +224,7 @@ function makePiechart(data, stadsdeelnaam){
 
   // A function that create / update the plot for a given variable:
   function update(data) {
+    console.log(data)
 
     // Compute the position of each group on the pie:
     var pie = d3.pie()
@@ -276,11 +268,31 @@ function makePiechart(data, stadsdeelnaam){
       .on('mouseover', tool_tip.show)
   		.on('mouseout', tool_tip.hide);
 
-    // remove the group that is not present anymore
+    // Remove the groups that are not present anymore
     u
       .exit()
       .remove()
+
+
+    var legend = d3.legendColor()
+    .scale(color)
+    .title("Legend")
+    .cellFilter(function(d){
+      if (data[d.label]){
+        return true
+      }
+      else {
+        return false
+      }
+    });
+
+    svg.append("g")
+    .attr("id", "legendaa")
+    .attr("transform", "translate(150,-110)")
+    .call(legend);
     }
+
+    d3.select("#piechart").select("svg").select("g").selectAll("legenda").remove();
 
     // Initialize the plot with the first dataset
     update(eigendomscategorie)
