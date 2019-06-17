@@ -60,39 +60,30 @@ body {
 }
 /* Set style for map svg */
 #map {
-	width: 600px;
+	width: 500px;
 	margin-left: 6px;
-	margin-right: 80px;
+	margin-right: 20px;
 	margin-top: 20px;
 	padding: 20px;
-	box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
 }
 
 /* Set style for barchart svg */
 #barchart {
 	width: 500px;
-	margin-left: 6px;
-	margin-right: 80px;
-	margin-top: 20px;
 	padding: 20px;
-	box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
 }
 
 #piechart {
 	width: 500px;
-	margin-left: 6px;
-	margin-right: 80px;
-	margin-top: 20px;
 	padding: 20px;
-	box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
 }
 
 /* Set style for bar chart */
 .bar {
-		fill: LightSkyBlue;
+		fill: rgb(31, 120, 180);
 	}
 .bar:hover {
-		fill: LightSlateGrey;
+		fill: rgb(31, 120, 180, 0.6);
 	}
 text {
 		font-family: sans-serif;

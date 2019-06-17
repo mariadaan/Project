@@ -49,4 +49,4 @@ Met behulp van file:///Users/mariadaan/Downloads/wia_2013-_stadsdeelprofielen.pd
 Legenda toegevoegd aan cirkeldiagram om het overzichtelijker te maken. Ik moet nog wel iets bedenken om het duidelijker te maken dat de informatie in de charts per stadsdeel en niet per buurt is.
 
 ## Dag 10
-Ik ben vandaag erg veel bezig geweest met het structureren van de elementen op de pagina. Ik dacht, doe ik effe, maar dit blijkt toch nog een stuk lastiger dan verwacht. 
+Ik ben vandaag erg veel bezig geweest met het structureren van de elementen op de pagina. Ik dacht, doe ik effe, maar dit blijkt toch nog een stuk lastiger dan verwacht. Uiteindelijk wel grotendeels gelukt. Besloten om de barchart bovenaan te zetten omdat die in eerste instantie dezelfde informatie laat zien als de kaart. Ook kleur van kaart veranderd zodat dit verband duidelijker is. Door gridsysteem staat alles nu in een keer op de pagina, waardoor de kaart nu wel wat kleiner is. Ik vind het echter nog steeds duidelijk en vind het mooier zo dan als de plots eronder staan. 

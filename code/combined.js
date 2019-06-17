@@ -17,8 +17,6 @@ function percentageFormat(number){
 }
 
 function makeMap(buurtdata, data){
-  console.log(buurtdata)
-  console.log(data);
   var stadsdeel = {"A": "Centrum",
                   "B": "Nieuw-West",
                   "E": "West",
@@ -30,17 +28,20 @@ function makeMap(buurtdata, data){
 
   var margin = {top: 40, right: 40, bottom: 40, left: 40};
 
+  width = 500,
+  height = 400
+
   // Create SVG for map
-  var svg = d3.select("#map"),
-      width = +svg.attr("width"),
-      height = +svg.attr("height");
+  var svg = d3.select("#map")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom);
 
   // Define map projection
   var projection = d3.geoAlbers()
     .center([4.9, 52.366667])
     .parallels([51.5, 51.49])
     .rotate(120)
-    .scale(150000)
+    .scale(130000)
     .translate([width / 2, height / 2]);
 
   //Define path generator
@@ -54,7 +55,7 @@ function makeMap(buurtdata, data){
     .attr("font-size", "large")
     .attr("text-decoration", "underline")
     .attr("font-weight", "bold")
-    .text("Huurklasse: percentage woningen van minder dan €425 p.m.");
+    .text("Huurklasse: % woningen van minder dan €425 p.m.");
 
   svg.append("text")
     .attr("x", 0)
@@ -109,7 +110,7 @@ function makeMap(buurtdata, data){
   // Give map a color range
   var color = d3.scaleLinear()
   .domain([0, 60])
-  .range(["white", "RebeccaPurple "]);
+  .range(["white", "rgb(31, 120, 180)"]);
 
   var waarde = 0
 
@@ -209,6 +210,7 @@ function makePiechart(data, stadsdeelnaam){
   // Create dropdown element
   var dropdown = d3.select("#piechart")
                     .insert("select", "svg")
+                    .attr("id", "dropdown")
                     .on("change", function(d){
                       update(all_data[this.value])
                       })
@@ -227,7 +229,6 @@ function makePiechart(data, stadsdeelnaam){
 
   // A function that create / update the plot for a given variable:
   function update(data) {
-    console.log(data)
 
     // Compute the position of each group on the pie:
     var pie = d3.pie()
