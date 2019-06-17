@@ -47,3 +47,6 @@ Ik heb de data per buurt ook in de Excel sheet gezet. Dit is alleen beschikbaar 
 Met behulp van file:///Users/mariadaan/Downloads/wia_2013-_stadsdeelprofielen.pdf pagina 109 uit kunnen vinden welke data van mij overeenkomt met welke missende buurtcombinaties op de kaart. Data hierop aangepast zodat er van elke buurt informatie is.
 
 Legenda toegevoegd aan cirkeldiagram om het overzichtelijker te maken. Ik moet nog wel iets bedenken om het duidelijker te maken dat de informatie in de charts per stadsdeel en niet per buurt is.
+
+## Dag 10
+Ik ben vandaag erg veel bezig geweest met het structureren van de elementen op de pagina. Ik dacht, doe ik effe, maar dit blijkt toch nog een stuk lastiger dan verwacht. 

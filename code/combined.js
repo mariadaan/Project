@@ -17,6 +17,8 @@ function percentageFormat(number){
 }
 
 function makeMap(buurtdata, data){
+  console.log(buurtdata)
+  console.log(data);
   var stadsdeel = {"A": "Centrum",
                   "B": "Nieuw-West",
                   "E": "West",
@@ -146,21 +148,22 @@ function makePiechart(data, stadsdeelnaam){
   // Remove former piechart and title, if existing
   d3.select("#piechart").selectAll("*").remove();
 
-  // Set the dimensions and margins of the graph
-  var width = 600
-      height = 300
-      margin = 20
+  // Define width and height for barchart svg
+	var margin = {top: 20, right: 50, bottom: 20, left: 5},
+			width = 500 - margin.left - margin.right;
+			height = 300 - margin.top - margin.bottom;
 
   // The radius of the pieplot is half the width or half the height (smallest one). Substract a bit of margin.
-  var radius = Math.min(width, height) / 2 - margin
+  var radius = Math.min(width, height) / 2 - margin.top
 
   // Append the svg object to the div called 'piechart'
   var svg = d3.select("#piechart")
               .append("svg")
-              .attr("width", width)
-      				.attr("height", height)
+              .attr("width", width + margin.left + margin.right)
+      				.attr("height", height + margin.top + margin.bottom)
               .append("g")
-              .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+              // .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+              .attr("transform", "translate(" + 140 + "," + 150 + ")");
 
    // Create list of all keys and all values
  	keys = Object.keys(data[stadsdeelnaam])
@@ -277,7 +280,6 @@ function makePiechart(data, stadsdeelnaam){
 
     var legend = d3.legendColor()
     .scale(color)
-    .title("Legend")
     .cellFilter(function(d){
       if (data[d.label]){
         return true
