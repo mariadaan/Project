@@ -44,7 +44,7 @@ Besloten alle elementen al op de pagina te zetten voordat er ergens op wordt gek
 Ik heb de data per buurt ook in de Excel sheet gezet. Dit is alleen beschikbaar voor sheet 1 en 2. De kleur van de kaart kan ik nu dus per buurt doen in plaats van per stadsdeel dus dat is top. Er zijn een paar buurten die nog niet bestaan in 2013, dus daar is geen data van. Ik twijfel of ik die buurten grijs moet maken of de data van het hele stadsdeel mee moet geven. Morgen tijdens de standup ga ik dat wel even bespreken.
 
 ## Dag 9
-Met behulp van file:///Users/mariadaan/Downloads/wia_2013-_stadsdeelprofielen.pdf pagina 109 uit kunnen vinden welke data van mij overeenkomt met welke missende buurtcombinaties op de kaart. Data hierop aangepast zodat er van elke buurt informatie is.
+Met behulp van https://assets.amsterdam.nl/publish/pages/620096/wia_2013-_stadsdeelprofielen.pdf pagina 109 uit kunnen vinden welke data van mij overeenkomt met welke missende buurtcombinaties op de kaart. Data hierop aangepast zodat er van elke buurt informatie is.
 
 Legenda toegevoegd aan cirkeldiagram om het overzichtelijker te maken. Ik moet nog wel iets bedenken om het duidelijker te maken dat de informatie in de charts per stadsdeel en niet per buurt is.
 
@@ -52,4 +52,13 @@ Legenda toegevoegd aan cirkeldiagram om het overzichtelijker te maken. Ik moet n
 Ik ben vandaag erg veel bezig geweest met het structureren van de elementen op de pagina. Ik dacht, doe ik effe, maar dit blijkt toch nog een stuk lastiger dan verwacht. Uiteindelijk wel grotendeels gelukt. Besloten om de barchart bovenaan te zetten omdat die in eerste instantie dezelfde informatie laat zien als de kaart. Ook kleur van kaart veranderd zodat dit verband duidelijker is. Door gridsysteem staat alles nu in een keer op de pagina, waardoor de kaart nu wel wat kleiner is. Ik vind het echter nog steeds duidelijk en vind het mooier zo dan als de plots eronder staan.
 
 ## Dag 11
-Plan gemaakt om extra informatie op de pagina te zetten. Niet aan code gewerkt, deze is eigenlijk voor een groot deel wel af. Om het wat completer te maken besteed ik nu aandacht aan de argumentatie en reden achter de cijfers. 
+Plan gemaakt om extra informatie op de pagina te zetten. Niet aan code gewerkt, deze is eigenlijk voor een groot deel wel af. Om het wat completer te maken besteed ik nu aandacht aan de argumentatie en reden achter de cijfers.
+
+## Dag 12
+Ik heb mijn standup groepje om advies gevraagd om een aantal zaken. Ik twijfelde of het misschien verwarrend was dat ik dezelfde kleur blauw gebruik in alle visualisaties terwijl ze niet hetzelfde betekenen. Volgens mijn medestudenten was dit niet per se verwarrend omdat er in de titels en legenda wel heel duidelijk is waar alles voor staat. Zij vonden het juist mooi voor de hele 'aesthetics' van de pagina dat alles bij elkaar past. Dit laat ik dus zo.
+
+Ook wilde ik eerst graag dat de piechart de volgorde als in de legenda zou behouden, in plaats van op grootte gesorteerd. Mijn groepje vond echter dat ik het juist zo moet laten omdat het hierdoor duidelijk is welke groep het grootste is. Een veelvoorkomend probleem met piecharts is namelijk dat ze moeilijk te lezen zijn omdat mensen niet zo makkelijk hoeken kunnen aflezen.
+
+Er zijn nog wel 2 andere problemen met de piechart die ik moet oplossen. Hieronder is te zien hoe hij er nu uit ziet bij de categorie woonsituatie. Blijkbaar is de kleur groen en rood niet te onderscheiden voor kleurenblinden dus dat is niet handig. Ook past de tekst niet overal binnen de svg, maar ik weet niet zo goed hoe ik dit het beste op kan lossen. Ik wil namelijk niet dat het nog breder wordt, maar ik denk ook dat het raar is als het op twee regels komt. Misschien kan ik het begin van het label wel verwijderen, zoals inwonend bij ouders/familie/vrienden -> bij ouders/familie/vrienden. Dan is het nog steeds wel duidelijk vind ik. In de tooltip kan ik dan wel nog het hele label laten staan.
+
+![blah](https://github.com/mariadaan/Project/blob/master/doc/pie.png)
