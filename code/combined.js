@@ -1,10 +1,10 @@
 // Maria Daan (11243406)
 
 // Load in data
-var requests = [d3.json("buurten.json"), d3.json("database.json")];
+var requests = [d3.json("buurten.json"), d3.json("database.json"), d3.json("stadsdeel_info.json")];
 Promise.all(requests).then(function(res) {
     // Initialize page with all elements
-    makeMap(res[0], res[1])
+    makeMap(res[0], res[1], res[2])
 }).catch(function(e){
     throw(e);
     });
@@ -16,7 +16,7 @@ function percentageFormat(number){
   return percentage
 }
 
-function makeMap(buurtdata, data){
+function makeMap(buurtdata, data, stadsdeel_info){
   var stadsdeel = {"A": "Centrum",
                   "B": "Nieuw-West",
                   "E": "West",
@@ -26,7 +26,7 @@ function makeMap(buurtdata, data){
                   "N": "Noord",
                   "T": "Zuidoost"}
 
-  var margin = {top: 40, right: 40, bottom: 40, left: 40};
+  var margin = {top: 40, right: 40, bottom: 0, left: 40};
 
   width = 500,
   height = 400
@@ -48,20 +48,24 @@ function makeMap(buurtdata, data){
   var path = d3.geoPath()
     .projection(projection);
 
-  // Map title
-  svg.append("text")
-    .attr("x", 0)
-    .attr("y", 15)
-    .attr("font-size", "large")
-    .attr("text-decoration", "underline")
-    .attr("font-weight", "bold")
-    .text("Huurklasse: % woningen van minder dan €425 p.m.");
+  // // Map title
+  // svg.append("text")
+  //   .attr("x", 0)
+  //   .attr("y", 15)
+  //   .attr("font-size", "large")
+  //   .attr("text-decoration", "underline")
+  //   .attr("font-weight", "bold")
+  //   .text("Huurklasse: % woningen van minder dan €425 p.m.");
+  // Show title
+  d3.select("#titlemap")
+    .append("h2")
+    .text("Huurklasse: percentage woningen van minder dan €425 per maand")
 
-  svg.append("text")
-    .attr("x", 0)
-    .attr("y", 40)
-    .attr("font-size", "medium")
-    .text("Beweeg muis over de kaart voor meer informatie");
+  // svg.append("text")
+  //   .attr("x", 0)
+  //   .attr("y", 40)
+  //   .attr("font-size", "medium")
+  //   .text("Beweeg muis over de kaart voor meer informatie");
 
   var y0 = 30;
   var spacingy = 20
@@ -130,19 +134,84 @@ function makeMap(buurtdata, data){
      .on("click", function(d){
        makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
+       showInfo(stadsdeel_info, stadsdeelnaam)
+       fillAgain(svg, color, data, stadsdeel, stadsdeelnaam)
+       updateTitle(stadsdeelnaam)
         })
 		 .on('mouseover', tool_tip.show)
      .on('mouseout', tool_tip.hide)
 
+   // Button element
+   var button = d3.select("#reset")
+                     .on("click", function(d){
+                       initialPage(data, stadsdeel_info)
+                       fillAgain(svg, color, data, stadsdeel, "Amsterdam")
+                       })
+
   // Draw all initial charts
-  initialPage(data)
+  initialPage(data, stadsdeel_info)
 };
 
+function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
+  // Give selected stadsdeel another color range
+  var color2 = d3.scaleLinear()
+  .domain([0, 60])
+  .range(["white", "rgb(134, 191, 84)"]);
+
+  // fill stadsdeel
+	svg.selectAll(".buurt")
+	   .attr("stroke", "rgba(0, 0, 0, 0.3)")
+     .attr('fill',function(d, i) {
+       // Make colour depending on value
+       waarde = data[d.properties.Buurtcombinatie_code]['< 425']
+
+       if (stadsdeelnaam == stadsdeel[d.properties.Stadsdeel_code] && stadsdeelnaam !== "Amsterdam"){
+         waarde = data[d.properties.Buurtcombinatie_code]['< 425']
+         return color2(parseInt(waarde * 100))
+       }
+       else {
+         return color(parseInt(waarde * 100));
+       }
+      })
+  }
+
 // Initialize page with all elements
-function initialPage(data){
+function initialPage(data, stadsdeel_info){
   stadsdeelnaam = "Amsterdam"
+  showInfo(stadsdeel_info, stadsdeelnaam)
   makeBarchart(data, stadsdeelnaam)
   makePiechart(data, stadsdeelnaam)
+  updateTitle(stadsdeelnaam)
+}
+
+function updateTitle(stadsdeelnaam){
+  // Remove former title, if existing
+  d3.select("#titlepage").selectAll("*").remove();
+
+  // Create new title
+  d3.select("#titlepage")
+    .append("h1")
+    .text(stadsdeelnaam + ", 2013")
+}
+
+function showInfo(stadsdeel_info, stadsdeelnaam){
+  // Remove former piechart and title, if existing
+  d3.select("#info").selectAll("*").remove();
+
+  var margin = 30,
+			width = 500 - margin - margin;
+			height = 400 - margin - margin;
+
+
+  var svg = d3.select("#info")
+              .attr("width",  width + margin + margin)
+              .attr("height", height + margin + margin);
+
+  svg.append("text")
+    .attr("x", 0)
+    .attr("y", 40)
+    .attr("font-size", "medium")
+    .text(stadsdeel_info[stadsdeelnaam]);
 }
 
 function makePiechart(data, stadsdeelnaam){
@@ -230,12 +299,9 @@ function makePiechart(data, stadsdeelnaam){
   // A function that create / update the plot for a given variable:
   function update(data) {
 
-    // Compute the position of each group on the pie:
+    // Compute the position of each group on the pie
     var pie = d3.pie()
       .value(function(d) {return d.value; });
-      // .sort(function(a, b) {
-      //     // Keep same order
-      //    return d3.ascending(a.key, b.key);} )
 
     var data_ready = pie(d3.entries(data))
 
@@ -355,9 +421,9 @@ function makeBarchart(data, stadsdeelnaam){
             "translate(" + margin.left + "," + margin.top + ")");
 
   	// Show title
-  	d3.select("#titlebars")
-  		.append("h2")
-  		.text(stadsdeelnaam + ", 2013")
+  	// d3.select("#titlebars")
+  	// 	.append("h2")
+  	// 	.text(stadsdeelnaam + ", 2013")
 
   	// Set the ranges
   	var x = d3.scaleBand()

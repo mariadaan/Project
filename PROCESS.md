@@ -62,3 +62,7 @@ Ook wilde ik eerst graag dat de piechart de volgorde als in de legenda zou behou
 Er zijn nog wel 2 andere problemen met de piechart die ik moet oplossen. Hieronder is te zien hoe hij er nu uit ziet bij de categorie woonsituatie. Blijkbaar is de kleur groen en rood niet te onderscheiden voor kleurenblinden dus dat is niet handig. Ook past de tekst niet overal binnen de svg, maar ik weet niet zo goed hoe ik dit het beste op kan lossen. Ik wil namelijk niet dat het nog breder wordt, maar ik denk ook dat het raar is als het op twee regels komt. Misschien kan ik het begin van het label wel verwijderen, zoals inwonend bij ouders/familie/vrienden -> bij ouders/familie/vrienden. Dan is het nog steeds wel duidelijk vind ik. In de tooltip kan ik dan wel nog het hele label laten staan.
 
 ![blah](https://github.com/mariadaan/Project/blob/master/doc/pie.png)
+
+Ik maak nu de kleur van het geklikte stadsdeel groen (past weer leuk bij piechart kleur). Hierdoor is het duidelijk dat de informatie in de charts over het hele stadsdeel gaat en niet over één buurt. Bovenaan de pagina staat nu in het groot de naam van het stadsdeel, in de hover alleen nog de buurtnaam. Ook heb ik een resetknop toegevoegd om terug te gaan naar de data van heel Amsterdam in plaats van de pagina te moeten refreshen. Beter nog zou zijn om de achtergrond te klikken voor een reset.
+
+![blah](https://github.com/mariadaan/Project/blob/master/doc/stadsdeel.png)

@@ -10,7 +10,7 @@ body {
 }
 
 h2 {
-  font-size: medium;
+  font-size: large;
 }
 
 .path {
@@ -117,7 +117,7 @@ text {
 }
 .one {
   grid-column: 1 / 3;
-  grid-row: 1 / 5;
+  grid-row: 1 / 3;
   box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
 }
 .two {
@@ -129,4 +129,33 @@ text {
   grid-column: 3 / 5;
   grid-row: 3 / 5;
   box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+}
+.four {
+  grid-column: 1 / 3;
+  grid-row: 3 / 5;
+  box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+}
+
+#info {
+  margin: 15px;
+}
+
+#titlemap {
+  margin: 30px;
+}
+
+.buttons  {
+  margin: 30px;
+}
+
+#reset  {
+  margin: 10px;
+}
+
+#Huurvoorraad:focus {
+    background-color:gray;
+}
+
+#Inkomensgroepen:focus {
+    background-color:gray;
 }
