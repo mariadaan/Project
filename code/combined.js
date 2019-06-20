@@ -48,14 +48,6 @@ function makeMap(buurtdata, data, stadsdeel_info){
   var path = d3.geoPath()
     .projection(projection);
 
-  // // Map title
-  // svg.append("text")
-  //   .attr("x", 0)
-  //   .attr("y", 15)
-  //   .attr("font-size", "large")
-  //   .attr("text-decoration", "underline")
-  //   .attr("font-weight", "bold")
-  //   .text("Huurklasse: % woningen van minder dan €425 p.m.");
   // Show title
   d3.select("#titlemap")
     .append("h2")
@@ -93,6 +85,44 @@ function makeMap(buurtdata, data, stadsdeel_info){
         }
       });
     svg.call(tool_tip);
+
+  // Append a defs (for definition) element to your SVG
+  var defs = svg.append("defs");
+
+  // Append a linearGradient element to the defs and give it a unique id
+  var linearGradient = defs.append("linearGradient")
+      .attr("id", "linear-gradient");
+
+  // Set the color for the start (0%)
+  linearGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "white");
+
+  // Set the color for the end (100%)
+  linearGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "rgb(31, 120, 180)");
+
+  // Draw the rectangle and fill with gradient
+  svg.append("rect")
+    .attr("y", 340)
+    .attr("x", 40)
+    .attr("width", 230)
+    .attr("height", 20)
+    .style("fill", "url(#linear-gradient)");
+
+function addLabel(svg, x, label){
+  svg.append("text")
+      .attr("y", 380)
+      .attr("x", x)
+      .text(label)
+      .style("fill", "DarkSlateGray");
+    }
+
+  addLabel(svg, 40, "0%")
+  addLabel(svg, 90, "25%")
+  addLabel(svg, 145, "50%")
+  addLabel(svg, 250, "75%")
 
   // Draw the buurten
   svg.selectAll(".buurt")
@@ -137,16 +167,17 @@ function makeMap(buurtdata, data, stadsdeel_info){
        showInfo(stadsdeel_info, stadsdeelnaam)
        fillAgain(svg, color, data, stadsdeel, stadsdeelnaam)
        updateTitle(stadsdeelnaam)
+       d3.event.stopPropagation() // prevent to select parents when children are clicked
         })
 		 .on('mouseover', tool_tip.show)
      .on('mouseout', tool_tip.hide)
 
-   // Button element
-   var button = d3.select("#reset")
-                     .on("click", function(d){
-                       initialPage(data, stadsdeel_info)
-                       fillAgain(svg, color, data, stadsdeel, "Amsterdam")
-                       })
+  // Go back to initial page when background is clicked
+  d3.select("#map")
+      .on("click", function(d){
+        initialPage(data, stadsdeel_info)
+        fillAgain(svg, color, data, stadsdeel, "Amsterdam")
+        })
 
   // Draw all initial charts
   initialPage(data, stadsdeel_info)
@@ -155,7 +186,7 @@ function makeMap(buurtdata, data, stadsdeel_info){
 function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
   // Give selected stadsdeel another color range
   var color2 = d3.scaleLinear()
-  .domain([0, 60])
+  .domain([0, 75])
   .range(["white", "rgb(134, 191, 84)"]);
 
   // fill stadsdeel
@@ -276,12 +307,13 @@ function makePiechart(data, stadsdeelnaam){
               "Leeftijdsgroep": leeftijdsgroep,
               "Opleidingsniveau": opleidingsniveau}
 
+
   // Create dropdown element
   var dropdown = d3.select("#piechart")
                     .insert("select", "svg")
                     .attr("id", "dropdown")
                     .on("change", function(d){
-                      update(all_data[this.value])
+                      update(all_data[this.value], this.value)
                       })
 
   // Give options to dropdown
@@ -297,7 +329,19 @@ function makePiechart(data, stadsdeelnaam){
     .range(d3.schemePaired);
 
   // A function that create / update the plot for a given variable:
-  function update(data) {
+  function update(data, categorie) {
+    var titles = {"Eigendomscategorie": "Omvang woningvoorraad naar eigendomscategorie per (samengestelde) buurtcombinatie",
+                "Inkomensgroepen": "Recente instromers en zittende bewoners naar inkomensgroepen",
+                "Woonsituatie": "Vorige woonsituatie recente instromers en zittende bewoners",
+                "Leeftijdsgroep": "Leeftijdsgroep recente instromers en zittende bewoners",
+                "Opleidingsniveau": "Opleidingsniveau recente instromers en zittende bewoners"}
+
+    d3.select("#titlepie").selectAll("*").remove()
+
+    // Show title
+    d3.select("#titlepie")
+      .append("h2")
+      .text(titles[categorie])
 
     // Compute the position of each group on the pie
     var pie = d3.pie()
@@ -363,7 +407,7 @@ function makePiechart(data, stadsdeelnaam){
     }
 
     // Initialize the plot with the first dataset
-    update(eigendomscategorie)
+    update(eigendomscategorie, "Eigendomscategorie")
 
   }
 
@@ -386,24 +430,38 @@ function makeBarchart(data, stadsdeelnaam){
   var values2 = values.slice(8, 14)
 
   // Initialize chart
-  create(keys1, values1)
+  create(keys1, values1, "Huurvoorraad")
 
-  // Button element
+  // Button elements showing when active
   var button1 = d3.select("#Huurvoorraad")
                     .on("click", function(d){
-                      create(keys1, values1)
+                      button2.classed("active", false)
+                      button1.classed("active", true)
+                      create(keys1, values1, "Huurvoorraad")
                       })
 
-  // Button element
   var button2 = d3.select("#Inkomensgroepen")
                     .on("click", function(d){
-                      create(keys2, values2);
+                      button1.classed("active", false)
+                      button2.classed("active", true)
+                      create(keys2, values2, "Inkomensgroepen");
                       })
 
-  function create(keys, values){
+  // Initial button situation
+  button1.classed("active", true)
+  button2.classed("active", false)
+
+  function create(keys, values, categorie){
     // Remove former barchart and title, if existing
     d3.select("#barchart").select("svg").remove();
     d3.select("#titlebars").select("h2").remove();
+
+    var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen",
+                  "Inkomensgroepen": "Bewoners naar inkomensgroepen"}
+
+    d3.select("#titlebars")
+      .append("h2")
+      .text(titles[categorie])
 
   	// Define width and height for barchart svg
   	var margin = {top: 20, right: 30, bottom: 20, left: 50},
@@ -419,11 +477,6 @@ function makeBarchart(data, stadsdeelnaam){
   				.append("g")
       		.attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
-
-  	// Show title
-  	// d3.select("#titlebars")
-  	// 	.append("h2")
-  	// 	.text(stadsdeelnaam + ", 2013")
 
   	// Set the ranges
   	var x = d3.scaleBand()

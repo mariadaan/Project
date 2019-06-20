@@ -11,6 +11,7 @@ body {
 
 h2 {
   font-size: large;
+  margin: 20px;
 }
 
 .path {
@@ -62,9 +63,7 @@ body {
 #map {
 	width: 500px;
 	margin-left: 6px;
-	margin-right: 20px;
-	margin-top: 20px;
-	padding: 20px;
+	margin-bottom: 0px;
 }
 
 /* Set style for barchart svg */
@@ -137,25 +136,15 @@ text {
 }
 
 #info {
-  margin: 15px;
+  margin: 20px;
 }
 
 #titlemap {
-  margin: 30px;
+  margin: 20px;
 }
 
-.buttons  {
-  margin: 30px;
-}
-
-#reset  {
-  margin: 10px;
-}
-
-#Huurvoorraad:focus {
-    background-color:gray;
-}
-
-#Inkomensgroepen:focus {
-    background-color:gray;
+/* Style the active class, and buttons on mouse-over */
+.active {
+  background-color: #666;
+  color: white;
 }
