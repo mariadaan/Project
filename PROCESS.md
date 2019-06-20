@@ -66,3 +66,8 @@ Er zijn nog wel 2 andere problemen met de piechart die ik moet oplossen. Hierond
 Ik maak nu de kleur van het geklikte stadsdeel groen (past weer leuk bij piechart kleur). Hierdoor is het duidelijk dat de informatie in de charts over het hele stadsdeel gaat en niet over één buurt. Bovenaan de pagina staat nu in het groot de naam van het stadsdeel, in de hover alleen nog de buurtnaam. Ook heb ik een resetknop toegevoegd om terug te gaan naar de data van heel Amsterdam in plaats van de pagina te moeten refreshen. Beter nog zou zijn om de achtergrond te klikken voor een reset.
 
 ![blah](https://github.com/mariadaan/Project/blob/master/doc/stadsdeel.png)
+
+## Dag 13
+Uitgebreidere titels toegevoegd ter verduidelijking van charts. Buttons na het klikken donkergrijs laten en ook op startpagina de button die hoort bij de informatie in de barchart al donkergrijs maken zodat het duidelijk is wat er nu geselecteerd is. Gradient legenda gemaakt bij de map want dat vond ik mooi, moet alleen nog even de manier van labels toevoegen veranderen want dat is nu een beetje omslachtig.
+
+Ik heb zelf een JSON file gemaakt met informatie over elk stadsdeel. Nu heb ik gewoon stukjes tekst van Wikipedia gepakt, maar ik vind het wel leuk om hier zelf wat meer over te schrijven dus dat ga ik nog aanpassen. Verder ben ik eigenlijk wel heel tevreden over hoe de pagina eruit ziet en zijn er geen drastische dingen meer die nog moeten gebeuren. 
