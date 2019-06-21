@@ -70,4 +70,7 @@ Ik maak nu de kleur van het geklikte stadsdeel groen (past weer leuk bij piechar
 ## Dag 13
 Uitgebreidere titels toegevoegd ter verduidelijking van charts. Buttons na het klikken donkergrijs laten en ook op startpagina de button die hoort bij de informatie in de barchart al donkergrijs maken zodat het duidelijk is wat er nu geselecteerd is. Gradient legenda gemaakt bij de map want dat vond ik mooi, moet alleen nog even de manier van labels toevoegen veranderen want dat is nu een beetje omslachtig.
 
-Ik heb zelf een JSON file gemaakt met informatie over elk stadsdeel. Nu heb ik gewoon stukjes tekst van Wikipedia gepakt, maar ik vind het wel leuk om hier zelf wat meer over te schrijven dus dat ga ik nog aanpassen. Verder ben ik eigenlijk wel heel tevreden over hoe de pagina eruit ziet en zijn er geen drastische dingen meer die nog moeten gebeuren. 
+Ik heb zelf een JSON file gemaakt met informatie over elk stadsdeel. Nu heb ik gewoon stukjes tekst van Wikipedia gepakt, maar ik vind het wel leuk om hier zelf wat meer over te schrijven dus dat ga ik nog aanpassen. Verder ben ik eigenlijk wel heel tevreden over hoe de pagina eruit ziet en zijn er geen drastische dingen meer die nog moeten gebeuren.
+
+## Dag 14
+Hover bij barchart verwijderd omdat dit de indruk geeft dat het klikbaar is. Kleur van barchart groen na klikken op stadsdeel. Nu bezig met de barchart updaten ipv verwijderen maar dit lukt niet zo goed. Extra file combinedd.js gemaakt om te proberen zonder alles te verpesten, maar werkt nog niet. 

@@ -1,6 +1,7 @@
 
 .starter-template {
-  padding: 3rem 1.5rem;
+  padding-top: 2rem;
+  padding-bottom: 0.5rem;
   text-align: center;
 }
 
@@ -81,9 +82,11 @@ body {
 .bar {
 		fill: rgb(31, 120, 180);
 	}
-.bar:hover {
-		fill: rgb(31, 120, 180, 0.6);
-	}
+
+.barz {
+  fill: rgb(134, 191, 84);
+}
+
 text {
 		font-family: sans-serif;
 	}
