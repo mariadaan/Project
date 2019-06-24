@@ -183,7 +183,11 @@ function makeMap(buurtdata, data, stadsdeel_info){
        return color(parseInt(value * 100)); })
      .on("click", function(d){
        // Update all charts
-       makeBarchart(data, stadsdeelnaam)
+       keys = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
+       values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
+       updateBarchart(stadsdeelnaam, keys, values)
+       handleButtons(data, stadsdeelnaam)
+       // makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
        showInfo(stadsdeel_info, stadsdeelnaam)
        fillAgain(svg, color, data, stadsdeel, stadsdeelnaam)
@@ -196,13 +200,20 @@ function makeMap(buurtdata, data, stadsdeel_info){
   // Go back to initial page when background is clicked
   d3.select("#map")
       .on("click", function(d){
-        initialPage(data, stadsdeel_info)
+        stadsdeelnaam = "Amsterdam"
+        keys = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
+        values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
+        console.log(keys, values)
+        updateBarchart(stadsdeelnaam, keys, values)
         fillAgain(svg, color, data, stadsdeel, "Amsterdam")
+        initialPage(data, stadsdeel_info)
         })
 
   // Draw all initial charts
   initialPage(data, stadsdeel_info)
+  makeBarchart(data, "Amsterdam")
 };
+
 
 function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
   // Give selected stadsdeel another color range (green)
@@ -227,14 +238,24 @@ function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
       })
   }
 
+
 // Initialize page with all elements
 function initialPage(data, stadsdeel_info){
   stadsdeelnaam = "Amsterdam"
   showInfo(stadsdeel_info, stadsdeelnaam)
-  makeBarchart(data, stadsdeelnaam)
+  // makeBarchart(data, stadsdeelnaam)
+  handleButtons(data, stadsdeelnaam)
   makePiechart(data, stadsdeelnaam)
   updateTitle(stadsdeelnaam)
+
+  // Make bars blue (again)
+  d3.selectAll(".bar")
+    .data(values)
+    .transition()
+    .duration(1000)
+    .style("fill", "rgb(31, 120, 180)")
 }
+
 
 function updateTitle(stadsdeelnaam){
   // Update main title on top of the page
@@ -242,6 +263,7 @@ function updateTitle(stadsdeelnaam){
     .transition()
     .text(stadsdeelnaam + ", 2013")
 }
+
 
 function showInfo(stadsdeel_info, stadsdeelnaam){
   // Remove former piechart and title, if existing
@@ -251,16 +273,200 @@ function showInfo(stadsdeel_info, stadsdeelnaam){
 			width = 500 - margin - margin;
 			height = 400 - margin - margin;
 
-
   var svg = d3.select("#info")
               .attr("width",  width + margin + margin)
               .attr("height", height + margin + margin);
 
   svg.append("text")
-    .attr("x", 0)
-    .attr("y", 40)
-    .attr("font-size", "medium")
-    .text(stadsdeel_info[stadsdeelnaam]);
+     .attr("x", 0)
+     .attr("y", 40)
+     .attr("font-size", "medium")
+     .text(stadsdeel_info[stadsdeelnaam]);
+}
+
+
+function getData(data, stadsdeelnaam, categorie){
+  // Create list of all keys and all values
+  keys = Object.keys(data[stadsdeelnaam])
+  values = [];
+  for (i in keys){
+    values.push(data[stadsdeelnaam][keys[i]]);
+  }
+
+  // Select wanted elements
+  var keys1 = keys.slice(3, 7)
+  var values1 = values.slice(3, 7)
+  var keys2 = keys.slice(8, 14)
+  var values2 = values.slice(8, 14)
+
+  if (categorie == "Huurvoorraad"){
+    var keys = keys1
+    var values = values1
+  }
+  else{
+    var keys = keys2
+    var values = values2
+  }
+
+  return [keys, values];
+}
+
+function updateBarchart(stadsdeelnaam, keys, values){
+  // Define width and height for barchart svg
+	var margin = {top: 20, right: 30, bottom: 20, left: 50},
+			width = 500 - margin.left - margin.right;
+			height = 300 - margin.top - margin.bottom;
+
+  // Set the ranges
+  var x = d3.scaleBand()
+            .range([0, width])
+            .padding(0.1);
+  var y = d3.scaleLinear()
+            .range([height, 0]);
+
+  console.log(keys, values);
+
+  // Scale the range of the data in the domains
+  // Hardcode y-domain to make it easier to compare barcharts
+  x.domain(keys);
+  y.domain([0, 0.7]);
+
+  d3.selectAll(".bar")
+    .data(values)
+    .transition()
+    .duration(1000)
+    .attr("x", function(d, i) { return x(keys[i]); })
+		.attr("width", x.bandwidth())
+		.attr("y", function(d) { return y(d); })
+		.attr("height", function(d) { return 260 - y(d) })
+    .style("fill", function(d){
+      // Change barchart color to green to clarify data is about one stadsdeel
+      if (stadsdeelnaam !== "Amsterdam") {
+        return "rgb(134, 191, 84)"
+      }
+      else{
+        return "rgb(31, 120, 180)"
+      }});
+
+  d3.selectAll("#x-axis")
+    .transition()
+    .duration(1000)
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .style("font-size", "8px");
+}
+
+function handleButtons(data, stadsdeelnaam){
+  // Button elements showing when active
+  var button1 = d3.select("#Huurvoorraad")
+                    .on("click", function(d){
+                      button2.classed("active", false)
+                      button1.classed("active", true)
+                      keys1 = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
+                      values1 = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
+                      updateBarchart(stadsdeelnaam, keys1, values1)
+                      })
+
+  var button2 = d3.select("#Inkomensgroepen")
+                    .on("click", function(d){
+                      button1.classed("active", false)
+                      button2.classed("active", true)
+                      keys2 = getData(data, stadsdeelnaam, "Inkomensgroepen")[0]
+                      values2 = getData(data, stadsdeelnaam, "Inkomensgroepen")[1]
+                      updateBarchart(stadsdeelnaam, keys2, values2);
+                      })
+
+  // Initial button situation
+  button1.classed("active", true)
+  button2.classed("active", false)
+}
+
+
+// Initialize barchart
+function makeBarchart(data, stadsdeelnaam){
+  var keys = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
+  var values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
+  var categorie = "Huurvoorraad"
+
+  // // Remove former barchart, if existing
+  // d3.select("#barchart").select("svg").remove();
+
+  var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen",
+                "Inkomensgroepen": "Bewoners naar inkomensgroepen"}
+
+  // Update title
+  d3.select("#titlebars").select("h2")
+    .transition()
+    .text(titles[categorie])
+
+	// Define width and height for barchart svg
+	var margin = {top: 20, right: 30, bottom: 20, left: 50},
+			width = 500 - margin.left - margin.right;
+			height = 300 - margin.top - margin.bottom;
+
+	// Create SVG
+	var svg = d3.select("#barchart")
+				.append("svg")
+				.attr("id", "bars")
+				.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom)
+				.append("g")
+    		.attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+	// Set the ranges
+	var x = d3.scaleBand()
+	          .range([0, width])
+	          .padding(0.1);
+	var y = d3.scaleLinear()
+	          .range([height, 0]);
+
+  // Scale the range of the data in the domains
+  // Hardcode y-domain to make it easier to compare barcharts
+	x.domain(keys);
+	y.domain([0, 0.7]);
+
+  // Create tooltip element
+  var tool_tip = d3.tip()
+     .attr("class", "d3-tip")
+     .offset([-8, 0])
+     .html(function(d) { return percentageFormat(d); });
+   svg.call(tool_tip);
+
+  // Create bars
+  svg.selectAll(".bars")
+    .data(values)
+		.enter()
+    .append("rect")
+		.attr("class", "bar")
+		.attr("x", function(d, i) { return x(keys[i]); })
+		.attr("width", x.bandwidth())
+		.attr("y", function(d) { return y(d); })
+		.attr("height", function(d) { return height - y(d) })
+		.on('mouseover', tool_tip.show)
+		.on('mouseout', tool_tip.hide);
+
+	// Add x axis
+	svg.append("g")
+        .attr("id", "x-axis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(d3.axisBottom(x))
+				.style("font-size", "8px");
+
+	// Add y axis
+	svg.append("g")
+		.call(d3.axisLeft(y));
+
+	// Add text label for the y axis
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x", -70)
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+			.style("font-size", "12px")
+      .text("Percentage -->");
+
 }
 
 function makePiechart(data, stadsdeelnaam){
@@ -291,15 +497,16 @@ function makePiechart(data, stadsdeelnaam){
  		values.push(data[stadsdeelnaam][keys[i]]);
  	}
 
-  function selectElements(keys, values){
+  // Create a dictionary of keys and values
+  function createDict(keys, values){
     var data = {};
     for (i = 0; i < keys.length; i++) {
       data[String(keys[i])] = values[i];
-    }
+      }
     return data
   }
 
-  // Select wanted elements
+  // Select wanted elements by index
   keys1 = keys.slice(0, 3)
   values1 = values.slice(0, 3)
   keys2 = keys.slice(8,14)
@@ -312,11 +519,11 @@ function makePiechart(data, stadsdeelnaam){
   values5 = values.slice(26, 30)
 
   // Create dictionaries for each category
-  var eigendomscategorie = selectElements(keys1, values1)
-  var inkomensgroepen = selectElements(keys2, values2)
-  var woonsituatie = selectElements(keys3, values3)
-  var leeftijdsgroep = selectElements(keys4, values4)
-  var opleidingsniveau = selectElements(keys5, values5)
+  var eigendomscategorie = createDict(keys1, values1)
+  var inkomensgroepen = createDict(keys2, values2)
+  var woonsituatie = createDict(keys3, values3)
+  var leeftijdsgroep = createDict(keys4, values4)
+  var opleidingsniveau = createDict(keys5, values5)
 
   // Connect dropdown menu options to actual data
   all_data = {"Eigendomscategorie": eigendomscategorie,
@@ -324,7 +531,6 @@ function makePiechart(data, stadsdeelnaam){
               "Woonsituatie": woonsituatie,
               "Leeftijdsgroep": leeftijdsgroep,
               "Opleidingsniveau": opleidingsniveau}
-
 
   // Create dropdown element
   var dropdown = d3.select("#piechart")
@@ -431,129 +637,3 @@ function makePiechart(data, stadsdeelnaam){
     update(eigendomscategorie, "Eigendomscategorie")
 
   }
-
-function makeBarchart(data, stadsdeelnaam){
-	// Create list of all keys and all values
-	keys = Object.keys(data[stadsdeelnaam])
-	values = [];
-	for (i in keys){
-		values.push(data[stadsdeelnaam][keys[i]]);
-	}
-
-	// Select wanted elements
-  var keys1 = keys.slice(3, 7)
-  var values1 = values.slice(3, 7)
-  var keys2 = keys.slice(8, 14)
-  var values2 = values.slice(8, 14)
-
-  // Initialize chart
-  create(keys1, values1, "Huurvoorraad")
-
-  // Button elements showing when active
-  var button1 = d3.select("#Huurvoorraad")
-                    .on("click", function(d){
-                      button2.classed("active", false)
-                      button1.classed("active", true)
-                      create(keys1, values1, "Huurvoorraad")
-                      })
-
-  var button2 = d3.select("#Inkomensgroepen")
-                    .on("click", function(d){
-                      button1.classed("active", false)
-                      button2.classed("active", true)
-                      create(keys2, values2, "Inkomensgroepen");
-                      })
-
-  // Initial button situation
-  button1.classed("active", true)
-  button2.classed("active", false)
-
-  function create(keys, values, categorie){
-    // Remove former barchart, if existing
-    d3.select("#barchart").select("svg").remove();
-
-    var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen",
-                  "Inkomensgroepen": "Bewoners naar inkomensgroepen"}
-
-    // Update title
-    d3.select("#titlebars").select("h2")
-      .transition()
-      .text(titles[categorie])
-
-  	// Define width and height for barchart svg
-  	var margin = {top: 20, right: 30, bottom: 20, left: 50},
-  			width = 500 - margin.left - margin.right;
-  			height = 300 - margin.top - margin.bottom;
-
-  	// Create SVG
-  	var svg = d3.select("#barchart")
-  				.append("svg")
-  				.attr("id", "bars")
-  				.attr("width", width + margin.left + margin.right)
-  				.attr("height", height + margin.top + margin.bottom)
-  				.append("g")
-      		.attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
-
-  	// Set the ranges
-  	var x = d3.scaleBand()
-  	          .range([0, width])
-  	          .padding(0.1);
-  	var y = d3.scaleLinear()
-  	          .range([height, 0]);
-
-    // Scale the range of the data in the domains
-    // Hardcode y-domain to make it easier to compare barcharts
-  	x.domain(keys);
-  	y.domain([0, 0.7]);
-
-
-    // Create tooltip element
-    var tool_tip = d3.tip()
-       .attr("class", "d3-tip")
-       .offset([-8, 0])
-       .html(function(d) { return percentageFormat(d); });
-     svg.call(tool_tip);
-
-    // Create bars
-    svg.selectAll(".bars")
-      .data(values)
-  		.enter()
-      .append("rect")
-  		.attr("class", "bar")
-  		.attr("x", function(d, i) { return x(keys[i]); })
-  		.attr("width", x.bandwidth())
-  		.attr("y", function(d) { return y(d); })
-  		.attr("height", function(d) { return height - y(d) })
-  		.on('mouseover', tool_tip.show)
-  		.on('mouseout', tool_tip.hide);
-
-    // Change barchart color to green to clarify data is about one stadsdeel
-    if (stadsdeelnaam !== "Amsterdam"){
-      svg.selectAll("rect")
-        .transition()
-        .duration(0)
-        .style("fill", "rgb(134, 191, 84)")
-    }
-
-  	// Add x axis
-  	svg.append("g")
-  				.attr("transform", "translate(0," + height + ")")
-  				.call(d3.axisBottom(x))
-  				.style("font-size", "8px");
-
-  	// Add y axis
-  	svg.append("g")
-  		.call(d3.axisLeft(y));
-
-  	// Add text label for the y axis
-    svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left)
-        .attr("x", -70)
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-  			.style("font-size", "12px")
-        .text("Percentage -->");
-  }
-}

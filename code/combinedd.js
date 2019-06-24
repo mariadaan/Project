@@ -166,7 +166,7 @@ function addLabel(svg, x, label){
        }
        return color(parseInt(waarde * 100)); })
      .on("click", function(d){
-       updateBarchart(data, stadsdeelnaam)
+       makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
        showInfo(stadsdeel_info, stadsdeelnaam)
        fillAgain(svg, color, data, stadsdeel, stadsdeelnaam)
@@ -413,95 +413,7 @@ function makePiechart(data, stadsdeelnaam){
   }
 
 function makeBarchart(data, stadsdeelnaam){
-  d3.select("#titlebars").select("h2").remove();
-
-  var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen",
-                "Inkomensgroepen": "Bewoners naar inkomensgroepen"}
-
-  d3.select("#titlebars")
-    .append("h2")
-    .text(titles["Huurvoorraad"])
-
-  // Define width and height for barchart svg
-  var margin = {top: 20, right: 30, bottom: 20, left: 50},
-  		width = 500 - margin.left - margin.right;
-  		height = 300 - margin.top - margin.bottom;
-
-  // Create SVG
-  var svg = d3.select("#barchart")
-  			.append("svg")
-  			.attr("width", width + margin.left + margin.right)
-  			.attr("height", height + margin.top + margin.bottom)
-  			.append("g")
-    		.attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-
-  // Set the ranges
-  var x = d3.scaleBand()
-            .range([0, width])
-            .padding(0.1);
-  var y = d3.scaleLinear()
-            .range([height, 0]);
-
-  keys = Object.keys(data[stadsdeelnaam])
-
-  // Scale the range of the data in the domains
-  // Hardcode y-domain to make it easier to compare barcharts
-  x.domain(keys);
-  y.domain([0, 0.7]);
-
-  // Create tooltip element
-  var tool_tip = d3.tip()
-     .attr("class", "d3-tip")
-     .offset([-8, 0])
-     .html(function(d) { return percentageFormat(d); });
-   svg.call(tool_tip);
-
-  // Add x axis
-  svg.append("g")
-  			.attr("transform", "translate(0," + height + ")")
-  			.call(d3.axisBottom(x))
-  			.style("font-size", "8px");
-
-  // Add y axis
-  svg.append("g")
-  	.call(d3.axisLeft(y));
-
-  // Add text label for the y axis
-  svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x", -70)
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-  		.style("font-size", "12px")
-      .text("Percentage -->");
-
-  // Button elements showing when active
-  var button1 = d3.select("#Huurvoorraad")
-                    .on("click", function(d){
-                      button2.classed("active", false)
-                      button1.classed("active", true)
-                      updateBarchart(data, stadsdeelnaam, "Huurvoorraad")
-                      })
-
-  var button2 = d3.select("#Inkomensgroepen")
-                    .on("click", function(d){
-                      button1.classed("active", false)
-                      button2.classed("active", true)
-                      updateBarchart(data, stadsdeelnaam, "Inkomensgroepen");
-                      })
-
-  // Initial button situation
-  button1.classed("active", true)
-  button2.classed("active", false)
-
-  // Initial barchart
-  updateBarchart(data, stadsdeelnaam, "Huurvoorraad")
-  }
-
-function updateBarchart(data, stadsdeelnaam, categorie, tool_tip){
-  // Create list of all keys and all values
+	// Create list of all keys and all values
 	keys = Object.keys(data[stadsdeelnaam])
 	values = [];
 	for (i in keys){
@@ -514,58 +426,113 @@ function updateBarchart(data, stadsdeelnaam, categorie, tool_tip){
   var keys2 = keys.slice(8, 14)
   var values2 = values.slice(8, 14)
 
-  keys = keys1
-  values = values1
+  // Initialize chart
+  create(keys1, values1, "Huurvoorraad")
 
-  if (categorie == "Huurvoorraad"){
-    keys = keys1
-    values = values1
-  }
-  else {
-    keys = keys2
-    values = values2
-  }
+  // Button elements showing when active
+  var button1 = d3.select("#Huurvoorraad")
+                    .on("click", function(d){
+                      button2.classed("active", false)
+                      button1.classed("active", true)
+                      create(keys1, values1, "Huurvoorraad")
+                      })
 
-  svg = d3.select("#barchart").select("svg")
+  var button2 = d3.select("#Inkomensgroepen")
+                    .on("click", function(d){
+                      button1.classed("active", false)
+                      button2.classed("active", true)
+                      create(keys2, values2, "Inkomensgroepen");
+                      })
 
-  var bars = svg.selectAll(".bars")
-                .data(values);
+  // Initial button situation
+  button1.classed("active", true)
+  button2.classed("active", false)
 
-  // Set the ranges
-  var x = d3.scaleBand()
-            .range([0, width])
-            .padding(0.1);
-  var y = d3.scaleLinear()
-            .range([height, 0]);
+  function create(keys, values, categorie){
+    // Remove former barchart and title, if existing
+    d3.select("#barchart").select("svg").remove();
+    d3.select("#titlebars").select("h2").remove();
 
-  x.domain(keys);
-  y.domain([0, 0.7]);
+    var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen",
+                  "Inkomensgroepen": "Bewoners naar inkomensgroepen"}
 
-  // Add bars for new data
-  bars.enter()
-    .append("rect")
-    .attr("class", "bar")
-    .attr("x", function(d, i) { return x(keys[i]); })
-    .attr("width", x.bandwidth())
-    .attr("y", function(d) { return y(d); })
-    .attr("height", function(d) { return height - y(d) })
-    .on('mouseover', tool_tip.show)
-    .on('mouseout', tool_tip.hide);
+    d3.select("#titlebars")
+      .append("h2")
+      .text(titles[categorie])
 
-  // Update old ones, already have x / width from before
-  bars
-      .transition().duration(250)
-      .attr("y", function(d,i) { return y(d); })
-      .attr("height", function(d,i) { return height - y(d); });
+  	// Define width and height for barchart svg
+  	var margin = {top: 20, right: 30, bottom: 20, left: 50},
+  			width = 500 - margin.left - margin.right;
+  			height = 300 - margin.top - margin.bottom;
 
-  // Remove old ones
-  bars.exit().remove();
+  	// Create SVG
+  	var svg = d3.select("#barchart")
+  				.append("svg")
+  				.attr("id", "bars")
+  				.attr("width", width + margin.left + margin.right)
+  				.attr("height", height + margin.top + margin.bottom)
+  				.append("g")
+      		.attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
 
-  // Change barchart color to green to clarify data is about one stadsdeel
-  if (stadsdeelnaam !== "Amsterdam"){
-    svg.selectAll("rect")
-      .transition()
-      .duration(700)
-      .style("fill", "rgb(134, 191, 84)")
+  	// Set the ranges
+  	var x = d3.scaleBand()
+  	          .range([0, width])
+  	          .padding(0.1);
+  	var y = d3.scaleLinear()
+  	          .range([height, 0]);
+
+  // Scale the range of the data in the domains
+  // Hardcode y-domain to make it easier to compare barcharts
+  	x.domain(keys);
+  	y.domain([0, 0.7]);
+
+  // Create tooltip element
+   var tool_tip = d3.tip()
+       .attr("class", "d3-tip")
+       .offset([-8, 0])
+       .html(function(d) { return percentageFormat(d); });
+     svg.call(tool_tip);
+
+
+  	// Create bars
+  	svg.selectAll(".bars")
+  		.data(values)
+  		.enter().append("rect")
+  		.attr("class", "bar")
+  		.attr("x", function(d, i) { return x(keys[i]); })
+  		.attr("width", x.bandwidth())
+  		.attr("y", function(d) { return y(d); })
+  		.attr("height", function(d) { return height - y(d) })
+  		.on('mouseover', tool_tip.show)
+  		.on('mouseout', tool_tip.hide);
+
+    // Change barchart color to green to clarify data is about one stadsdeel
+    if (stadsdeelnaam !== "Amsterdam"){
+      svg.selectAll("rect")
+        .transition()
+        .duration(700)
+        .style("fill", "rgb(134, 191, 84)")
+    }
+
+  	// Add x axis
+  	svg.append("g")
+  				.attr("transform", "translate(0," + height + ")")
+  				.call(d3.axisBottom(x))
+  				.style("font-size", "8px");
+
+  	// Add y axis
+  	svg.append("g")
+  		.call(d3.axisLeft(y));
+
+  	// Add text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x", -70)
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+  			.style("font-size", "12px")
+        .text("Percentage -->");
   }
 }

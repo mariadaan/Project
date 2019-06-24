@@ -73,4 +73,9 @@ Uitgebreidere titels toegevoegd ter verduidelijking van charts. Buttons na het k
 Ik heb zelf een JSON file gemaakt met informatie over elk stadsdeel. Nu heb ik gewoon stukjes tekst van Wikipedia gepakt, maar ik vind het wel leuk om hier zelf wat meer over te schrijven dus dat ga ik nog aanpassen. Verder ben ik eigenlijk wel heel tevreden over hoe de pagina eruit ziet en zijn er geen drastische dingen meer die nog moeten gebeuren.
 
 ## Dag 14
-Hover bij barchart verwijderd omdat dit de indruk geeft dat het klikbaar is. Kleur van barchart groen na klikken op stadsdeel. Nu bezig met de barchart updaten ipv verwijderen maar dit lukt niet zo goed. Extra file combinedd.js gemaakt om te proberen zonder alles te verpesten, maar werkt nog niet. 
+Hover bij barchart verwijderd omdat dit de indruk geeft dat het klikbaar is. Kleur van barchart groen na klikken op stadsdeel. Nu bezig met de barchart updaten ipv verwijderen maar dit lukt niet zo goed. Extra file combinedd.js gemaakt om te proberen zonder alles te verpesten, maar werkt nog niet.
+
+## Dag 15
+Eindelijk de barchart updatend gemaakt. Code opgeschoond en comments geplaatst. Nieuw kleurenschema gemaakt voor de piechart om alles mooi bij elkaar te laten passen. Ik heb wel dezelde animatie-stijl behouden omdat ik het juist zo leuk vind hoe het beweegt. Ook heb ik voor een mix van verschillende kleuren groen en blauw gekozen om niet de indruk te wekken dat er een volgorde in de categorieën zit. Deze structuur zorgt ervoor dat je oplettend blijft en dat het interessant is om de tooltip te gebruiken.
+
+Er zit nu een soepele overgang van blauw naar groen en terug in de barchart, wat er mooi uitziet. Er zitten nog wat laatste bugs in die ik morgen moet oplossen. Ook wil ik de over-pagina nog een beetje upgraden, misschien met een mooie foto van Amsterdam en nog iets meer informatie over het doel van deze datavisualisatie.
