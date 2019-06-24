@@ -3,20 +3,23 @@
 // Load in data
 var requests = [d3.json("buurten.json"), d3.json("database.json"), d3.json("stadsdeel_info.json")];
 Promise.all(requests).then(function(res) {
-    // Initialize page with all elements
+    // Initialize page
     makeMap(res[0], res[1], res[2])
 }).catch(function(e){
     throw(e);
     });
 
-// Convert float values to percentage format string
+
+// Function to convert float values to percentage format string
 function percentageFormat(number){
   number = String(Math.round((number) * 100))
   percentage = number + "%"
   return percentage
 }
 
+
 function makeMap(buurtdata, data, stadsdeel_info){
+  // Connect stadsdeelcode to stadsdeelnaam
   var stadsdeel = {"A": "Centrum",
                   "B": "Nieuw-West",
                   "E": "West",
@@ -26,40 +29,43 @@ function makeMap(buurtdata, data, stadsdeel_info){
                   "N": "Noord",
                   "T": "Zuidoost"}
 
+  // Margin, width and height for SVG
   var margin = {top: 40, right: 40, bottom: 0, left: 40};
-
-  width = 500,
-  height = 400
+      width = 500,
+      height = 400
 
   // Create SVG for map
   var svg = d3.select("#map")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom);
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom);
 
   // Define map projection
   var projection = d3.geoAlbers()
-    .center([4.9, 52.366667])
-    .parallels([51.5, 51.49])
-    .rotate(120)
-    .scale(130000)
-    .translate([width / 2, height / 2]);
+                     .center([4.9, 52.366667])
+                     .parallels([51.5, 51.49])
+                     .rotate(120)
+                     .scale(130000)
+                     .translate([width / 2, height / 2]);
 
-  //Define path generator
+  // Define path generator
   var path = d3.geoPath()
-    .projection(projection);
+               .projection(projection);
 
   // Show title
   d3.select("#titlemap")
     .append("h2")
     .text("Huurklasse: percentage woningen van minder dan €425 per maand")
 
+  // Define spacing
   var y0 = 30;
   var spacingy = 20
   var x0 = 5
   var spacingx = 55
 
-  // Create stadsdelen
-  var stadsdelen = topojson.feature(buurtdata, buurtdata.objects.buurten).features;
+  // Get buurt objects from topojson file
+  var buurten = topojson.feature(buurtdata, buurtdata.objects.buurten).features;
+
+  // Create variable for stadsdeelnaam and buurtcode
   var stadsdeelnaam = ""
   var buurtcode = ""
 
@@ -69,10 +75,12 @@ function makeMap(buurtdata, data, stadsdeel_info){
       .offset([-8, 0])
       .html(function(d) {
         stadsdeelnaam = stadsdeel[d.properties.Stadsdeel_code]
-        // Als buurtdata niet beschikbaar is, stadsdeeldata gebruiken of grijs maken?
         buurtcode = d.properties.Buurtcombinatie_code
+
+        // Error/missing data checker
         if (typeof data[d.properties.Buurtcombinatie_code] !== 'undefined') {
-          return d.properties.Buurtcombinatie + " (" + stadsdeelnaam + ")" + "<br>" + percentageFormat(data[buurtcode]['< 425'])
+          // Show buurtnaam and percentage value in tooltip
+          return d.properties.Buurtcombinatie + "<br>" + percentageFormat(data[buurtcode]['< 425'])
         }
         else{
           return d.properties.Buurtcombinatie
@@ -80,63 +88,70 @@ function makeMap(buurtdata, data, stadsdeel_info){
       });
     svg.call(tool_tip);
 
-  // Append a defs (for definition) element to your SVG
+  // Create defs element to store graphical object (gradient legenda)
   var defs = svg.append("defs");
 
-  // Append a linearGradient element to the defs and give it a unique id
+  // Append linearGradient element to the defs
   var linearGradient = defs.append("linearGradient")
-      .attr("id", "linear-gradient");
+                           .attr("id", "linear-gradient");
 
   // Set the color for the start (0%)
   linearGradient.append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", "white");
+                .attr("offset", "0%")
+                .attr("stop-color", "white");
 
   // Set the color for the end (100%)
   linearGradient.append("stop")
       .attr("offset", "100%")
       .attr("stop-color", "rgb(31, 120, 180)");
 
+  // Define width and height of gradient rectangle
   width = 230
   height = 20
+
+  // Define where on svg the element and text labels should be located
   x_start = 40
   x_end = x_start + width
   distance = 78
 
   // Draw the rectangle and fill with gradient
   svg.append("rect")
-    .attr("y", 340)
-    .attr("x", x_start)
-    .attr("width", width)
-    .attr("height", height)
-    .style("fill", "url(#linear-gradient)");
+     .attr("y", 340)
+     .attr("x", x_start)
+     .attr("width", width)
+     .attr("height", height)
+     .style("fill", "url(#linear-gradient)");
 
-function addLabel(svg, x, label){
-  svg.append("text")
-      .attr("y", 377)
-      .attr("x", x)
-      .attr("text-anchor", "middle")
-      .attr("font-size", 13)
-      .text(label)
-      .style("fill", "DarkSlateGray");
-    }
 
-  labels = ["0%", "25%", "50%", "75%"]
+  function addLabel(svg, x, label){
+    svg.append("text")
+       .attr("y", 377)
+       .attr("x", x)
+       .attr("text-anchor", "middle")
+       .attr("font-size", 13)
+       .text(label)
+       .style("fill", "DarkSlateGray");
+      }
 
-  for (i in labels){
-    var offset = x_start + distance * i
-    addLabel(svg, offset, labels[i])
- 	}
+    labels = ["0%", "25%", "50%", "75%"]
+
+    for (i in labels){
+      var offset = x_start + distance * i
+      addLabel(svg, offset, labels[i])
+  }
+
 
   // Draw the buurten
   svg.selectAll(".buurt")
-      .data(stadsdelen)
-    .enter().insert("g")
-      .append("path")
-        .attr("class", "buurt")
-        .attr("d", path)
-      .append("title")
-        .text(function(d) { return stadsdeel[d.properties.Stadsdeel_code] + ": " + d.properties.Buurtcombinatie });
+     .data(buurten)
+     .enter().insert("g")
+     .append("path")
+     .attr("class", "buurt")
+     .attr("d", path)
+     .append("title")
+     .text(function(d) {
+       return stadsdeel[d.properties.Stadsdeel_code] + ": " + d.properties.Buurtcombinatie
+      });
 
   // Draw borders around stadsdelen
   svg.append("path")
@@ -145,27 +160,29 @@ function addLabel(svg, x, label){
         return stadsdeel[a.properties.Stadsdeel_code] !== stadsdeel[b.properties.Stadsdeel_code];
         })));
 
-  // Give map a color range
+  // Give map a color range (blue)
   var color = d3.scaleLinear()
   .domain([0, 60])
   .range(["white", "rgb(31, 120, 180)"]);
 
-  var waarde = 0
+  // Variable to store value of '< 425' category for each buurt
+  var value = 0
 
 	// Make map interactive
 	svg.selectAll(".buurt")
 	   .attr("stroke", "rgba(0, 0, 0, 0.3)")
      .attr('fill',function(d, i) {
-       // Make colour depending on value
+       // Error/missing data checker
        if (typeof data[d.properties.Buurtcombinatie_code] !== 'undefined') {
-           // the variable is defined
-           waarde = data[d.properties.Buurtcombinatie_code]['< 425']
+           value = data[d.properties.Buurtcombinatie_code]['< 425']
        }
        else{
-         waarde = 10
+         value = 10 // will make the color black
        }
-       return color(parseInt(waarde * 100)); })
+       // Make colour depending on value
+       return color(parseInt(value * 100)); })
      .on("click", function(d){
+       // Update all charts
        makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
        showInfo(stadsdeel_info, stadsdeelnaam)
@@ -188,7 +205,7 @@ function addLabel(svg, x, label){
 };
 
 function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
-  // Give selected stadsdeel another color range
+  // Give selected stadsdeel another color range (green)
   var color2 = d3.scaleLinear()
   .domain([0, 75])
   .range(["white", "rgb(134, 191, 84)"]);
@@ -198,14 +215,14 @@ function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
 	   .attr("stroke", "rgba(0, 0, 0, 0.3)")
      .attr('fill',function(d, i) {
        // Make colour depending on value
-       waarde = data[d.properties.Buurtcombinatie_code]['< 425']
+       value = data[d.properties.Buurtcombinatie_code]['< 425']
 
        if (stadsdeelnaam == stadsdeel[d.properties.Stadsdeel_code] && stadsdeelnaam !== "Amsterdam"){
-         waarde = data[d.properties.Buurtcombinatie_code]['< 425']
-         return color2(parseInt(waarde * 100))
+         value = data[d.properties.Buurtcombinatie_code]['< 425']
+         return color2(parseInt(value * 100))
        }
        else {
-         return color(parseInt(waarde * 100));
+         return color(parseInt(value * 100));
        }
       })
   }
@@ -314,22 +331,24 @@ function makePiechart(data, stadsdeelnaam){
                     .insert("select", "svg")
                     .attr("id", "dropdown")
                     .on("change", function(d){
-                      update(all_data[this.value], this.value)
+                      update(all_data[this.value], this.value);
                       })
 
   // Give options to dropdown
   dropdown.selectAll("option")
       .data(["Eigendomscategorie", "Inkomensgroepen", "Woonsituatie", "Leeftijdsgroep", "Opleidingsniveau"])
       .enter().append("option")
-      .text(function (d) {
-        return d; })
+      .text(function (d) { return d; })
 
-  // set the color scale
+  // My own color range with cool blue/green colors, very aesthetic
+  var myColors = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#75c493", "#7598c4"];
+
+  // Set the color scale
   var color = d3.scaleOrdinal()
-    .domain(keys)
-    .range(d3.schemePaired);
+                .domain(keys)
+                .range(myColors);
 
-  // A function that create / update the plot for a given variable:
+  // A function that creates / updates the plot for a given variable:
   function update(data, categorie) {
     var titles = {"Eigendomscategorie": "Omvang woningvoorraad naar eigendomscategorie per (samengestelde) buurtcombinatie",
                 "Inkomensgroepen": "Recente instromers en zittende bewoners naar inkomensgroepen",
@@ -339,57 +358,57 @@ function makePiechart(data, stadsdeelnaam){
 
     d3.select("#titlepie").selectAll("*").remove()
 
-    // Show title
+    // Show full title
     d3.select("#titlepie")
       .append("h2")
       .text(titles[categorie])
 
     // Compute the position of each group on the pie
     var pie = d3.pie()
-      .value(function(d) {return d.value; });
+                .value(function(d) {return d.value; });
 
     var data_ready = pie(d3.entries(data))
 
     // Create tooltip element
-     var tool_tip = d3.tip()
-         .attr("class", "d3-tip")
-         .html(function(d) {
-           key = d.data.key
-           value = d.data.value
-           return key + ": " + percentageFormat(value); });
-       svg.call(tool_tip);
+    var tool_tip = d3.tip()
+                    .attr("class", "d3-tip")
+                    .html(function(d) {
+                      key = d.data.key
+                      value = d.data.value
+                      return key + ": " + percentageFormat(value); });
+     svg.call(tool_tip);
 
     // map to data
-    var u = svg.selectAll("path")
+    var pie = svg.selectAll("path")
       .data(data_ready)
 
     // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-    u
-      .enter()
-      .append('path')
-      .merge(u)
-      .transition()
-      .duration(1000)
-      .attr('d', d3.arc()
+    pie.enter()
+       .append('path')
+       .merge(pie)
+       .transition()
+       .duration(1000)
+       .attr('d', d3.arc()
         .innerRadius(0)
         .outerRadius(radius)
-      )
-      .attr('fill', function(d){ return(color(d.data.key)) })
-      .attr("stroke", "white")
-      .style("stroke-width", "2px")
-      .style("opacity", 1);
+        )
+       .attr('fill', function(d){ return(color(d.data.key)) })
+       .attr("stroke", "white")
+       .style("stroke-width", "2px")
+       .style("opacity", 1);
 
+    // Add interactive tooltip
     svg.selectAll("path")
-      .on('mouseover', tool_tip.show)
-  		.on('mouseout', tool_tip.hide);
+       .on('mouseover', tool_tip.show)
+    	 .on('mouseout', tool_tip.hide);
 
     // Remove the groups that are not present anymore
-    u
-      .exit()
-      .remove()
+    pie.exit()
+       .remove()
 
     d3.select("#piechart").selectAll("#legendaa").remove();
 
+    // Create legend elements
     var legend = d3.legendColor()
     .scale(color)
     .cellFilter(function(d){
@@ -401,6 +420,7 @@ function makePiechart(data, stadsdeelnaam){
       }
     });
 
+    // Add legend to piechart svg
     svg.append("g")
     .attr("id", "legendaa")
     .attr("transform", "translate(150,-110)")
@@ -449,15 +469,15 @@ function makeBarchart(data, stadsdeelnaam){
   button2.classed("active", false)
 
   function create(keys, values, categorie){
-    // Remove former barchart and title, if existing
+    // Remove former barchart, if existing
     d3.select("#barchart").select("svg").remove();
-    d3.select("#titlebars").select("h2").remove();
 
     var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen",
                   "Inkomensgroepen": "Bewoners naar inkomensgroepen"}
 
-    d3.select("#titlebars")
-      .append("h2")
+    // Update title
+    d3.select("#titlebars").select("h2")
+      .transition()
       .text(titles[categorie])
 
   	// Define width and height for barchart svg
@@ -482,23 +502,24 @@ function makeBarchart(data, stadsdeelnaam){
   	var y = d3.scaleLinear()
   	          .range([height, 0]);
 
-  // Scale the range of the data in the domains
-  // Hardcode y-domain to make it easier to compare barcharts
+    // Scale the range of the data in the domains
+    // Hardcode y-domain to make it easier to compare barcharts
   	x.domain(keys);
   	y.domain([0, 0.7]);
 
-  // Create tooltip element
-   var tool_tip = d3.tip()
+
+    // Create tooltip element
+    var tool_tip = d3.tip()
        .attr("class", "d3-tip")
        .offset([-8, 0])
        .html(function(d) { return percentageFormat(d); });
      svg.call(tool_tip);
 
-
-  	// Create bars
-  	svg.selectAll(".bars")
-  		.data(values)
-  		.enter().append("rect")
+    // Create bars
+    svg.selectAll(".bars")
+      .data(values)
+  		.enter()
+      .append("rect")
   		.attr("class", "bar")
   		.attr("x", function(d, i) { return x(keys[i]); })
   		.attr("width", x.bandwidth())
@@ -511,7 +532,7 @@ function makeBarchart(data, stadsdeelnaam){
     if (stadsdeelnaam !== "Amsterdam"){
       svg.selectAll("rect")
         .transition()
-        .duration(700)
+        .duration(0)
         .style("fill", "rgb(134, 191, 84)")
     }
 

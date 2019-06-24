@@ -500,7 +500,7 @@ function makeBarchart(data, stadsdeelnaam){
   updateBarchart(data, stadsdeelnaam, "Huurvoorraad")
   }
 
-function updateBarchart(data, stadsdeelnaam, categorie){
+function updateBarchart(data, stadsdeelnaam, categorie, tool_tip){
   // Create list of all keys and all values
 	keys = Object.keys(data[stadsdeelnaam])
 	values = [];
@@ -537,7 +537,7 @@ function updateBarchart(data, stadsdeelnaam, categorie){
             .padding(0.1);
   var y = d3.scaleLinear()
             .range([height, 0]);
-            
+
   x.domain(keys);
   y.domain([0, 0.7]);
 
