@@ -174,17 +174,17 @@ function makeMap(buurtdata, data, stadsdeel_info){
      .attr('fill',function(d, i) {
        // Error/missing data checker
        if (typeof data[d.properties.Buurtcombinatie_code] !== 'undefined') {
-           value = data[d.properties.Buurtcombinatie_code]['< 425']
+          var value = data[d.properties.Buurtcombinatie_code]['< 425']
        }
        else{
-         value = 10 // will make the color black
+         var value = 10 // will make the color black
        }
        // Make colour depending on value
        return color(parseInt(value * 100)); })
      .on("click", function(d){
        // Update all charts
-       keys = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
-       values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
+       var keys = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
+       var values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
        updateBarchart(stadsdeelnaam, keys, values)
        handleButtons(data, stadsdeelnaam)
        // makeBarchart(data, stadsdeelnaam)
@@ -202,13 +202,11 @@ function makeMap(buurtdata, data, stadsdeel_info){
   // Go back to initial page when background is clicked
   d3.select("#map")
       .on("click", function(d){
-        stadsdeelnaam = "Amsterdam"
-        keys = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
-        values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
-        console.log(keys, values)
+        var stadsdeelnaam = "Amsterdam"
+        var keys = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
+        var values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
         updateBarchart(stadsdeelnaam, keys, values)
         fillAgain(svg, color, data, stadsdeel, "Amsterdam")
-        console.log(keys, values)
         initialPage(data, stadsdeel_info)
         updateInfo(stadsdeel_info, stadsdeelnaam)
         })
@@ -232,10 +230,10 @@ function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
       .duration(1000)
      .attr('fill',function(d, i) {
        // Make colour depending on value
-       value = data[d.properties.Buurtcombinatie_code]['< 425']
+       var value = data[d.properties.Buurtcombinatie_code]['< 425']
 
        if (stadsdeelnaam == stadsdeel[d.properties.Stadsdeel_code] && stadsdeelnaam !== "Amsterdam"){
-         value = data[d.properties.Buurtcombinatie_code]['< 425']
+         var value = data[d.properties.Buurtcombinatie_code]['< 425']
          return color2(parseInt(value * 100))
        }
        else {
@@ -247,7 +245,7 @@ function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
 
 // Initialize page with all elements
 function initialPage(data, stadsdeel_info){
-  stadsdeelnaam = "Amsterdam"
+  var stadsdeelnaam = "Amsterdam"
   // showInfo(stadsdeel_info, stadsdeelnaam)
   // makeBarchart(data, stadsdeelnaam)
   handleButtons(data, stadsdeelnaam)
@@ -255,11 +253,11 @@ function initialPage(data, stadsdeel_info){
   updateTitle(stadsdeelnaam)
 
   // Make bars blue (again)
-  d3.selectAll(".bar")
-    .data(values)
-    .transition()
-    .duration(1000)
-    .style("fill", "rgb(31, 120, 180)")
+  // d3.selectAll(".bar")
+  //   .data(values)
+  //   .transition()
+  //   .duration(1000)
+  //   .style("fill", "rgb(31, 120, 180)")
 }
 
 
@@ -298,8 +296,8 @@ function updateInfo(stadsdeel_info, stadsdeelnaam){
 
 function getData(data, stadsdeelnaam, categorie){
   // Create list of all keys and all values
-  keys = Object.keys(data[stadsdeelnaam])
-  values = [];
+  var keys = Object.keys(data[stadsdeelnaam])
+  var values = [];
   for (i in keys){
     values.push(data[stadsdeelnaam][keys[i]]);
   }
@@ -335,15 +333,18 @@ function updateBarchart(stadsdeelnaam, keys, values){
   var y = d3.scaleLinear()
             .range([height, 0]);
 
-  console.log(keys, values);
-
   // Scale the range of the data in the domains
   // Hardcode y-domain to make it easier to compare barcharts
   x.domain(keys);
   y.domain([0, 0.7]);
 
-  d3.selectAll(".bar")
-    .data(values)
+  var bars = d3.select("#barchart").select("g").selectAll(".bar")
+                .data(values);
+
+  bars.enter()
+    .append("rect")
+    .attr("class", "bar")
+    .merge(bars)
     .transition()
     .duration(1000)
     .attr("x", function(d, i) { return x(keys[i]); })
@@ -358,6 +359,8 @@ function updateBarchart(stadsdeelnaam, keys, values){
       else{
         return "rgb(31, 120, 180)"
       }});
+  bars.exit()
+     .remove()
 
   d3.selectAll("#x-axis")
     .transition()
@@ -445,7 +448,7 @@ function makeBarchart(data, stadsdeelnaam){
    svg.call(tool_tip);
 
   // Create bars
-  svg.selectAll(".bars")
+  svg.selectAll(".bar")
     .data(values)
 		.enter()
     .append("rect")
@@ -492,8 +495,8 @@ function updatePiechart(data, stadsdeelnaam)  {
   var radius = Math.min(width, height) / 2 - margin.top
 
    // Create list of all keys and all values
-  keys = Object.keys(data[stadsdeelnaam])
-  values = [];
+  var keys = Object.keys(data[stadsdeelnaam])
+  var values = [];
   for (i in keys){
     values.push(data[stadsdeelnaam][keys[i]]);
   }
@@ -508,16 +511,16 @@ function updatePiechart(data, stadsdeelnaam)  {
   }
 
   // Select wanted elements by index
-  keys1 = keys.slice(0, 3)
-  values1 = values.slice(0, 3)
-  keys2 = keys.slice(8,14)
-  values2 = values.slice(8,14)
-  keys3 = keys.slice(14, 20)
-  values3 = values.slice(14, 20)
-  keys4 = keys.slice(20, 26)
-  values4 = values.slice(20, 26)
-  keys5 = keys.slice(26, 30)
-  values5 = values.slice(26, 30)
+  var keys1 = keys.slice(0, 3)
+  var values1 = values.slice(0, 3)
+  var keys2 = keys.slice(8,14)
+  var values2 = values.slice(8,14)
+  var keys3 = keys.slice(14, 20)
+  var values3 = values.slice(14, 20)
+  var keys4 = keys.slice(20, 26)
+  var values4 = values.slice(20, 26)
+  var keys5 = keys.slice(26, 30)
+  var values5 = values.slice(26, 30)
 
   // Create dictionaries for each category
   var eigendomscategorie = createDict(keys1, values1)
@@ -527,7 +530,7 @@ function updatePiechart(data, stadsdeelnaam)  {
   var opleidingsniveau = createDict(keys5, values5)
 
   // Connect dropdown menu options to actual data
-  all_data = {"Eigendomscategorie": eigendomscategorie,
+  var all_data = {"Eigendomscategorie": eigendomscategorie,
               "Inkomensgroepen": inkomensgroepen,
               "Woonsituatie": woonsituatie,
               "Leeftijdsgroep": leeftijdsgroep,
@@ -656,8 +659,8 @@ function makePiechart(data, stadsdeelnaam){
               // .attr("transform", "translate(" + 140 + "," + 150 + ")");
 
    // Create list of all keys and all values
- 	keys = Object.keys(data[stadsdeelnaam])
- 	values = [];
+ 	var keys = Object.keys(data[stadsdeelnaam])
+ 	var values = [];
  	for (i in keys){
  		values.push(data[stadsdeelnaam][keys[i]]);
  	}
@@ -672,16 +675,16 @@ function makePiechart(data, stadsdeelnaam){
   }
 
   // Select wanted elements by index
-  keys1 = keys.slice(0, 3)
-  values1 = values.slice(0, 3)
-  keys2 = keys.slice(8,14)
-  values2 = values.slice(8,14)
-  keys3 = keys.slice(14, 20)
-  values3 = values.slice(14, 20)
-  keys4 = keys.slice(20, 26)
-  values4 = values.slice(20, 26)
-  keys5 = keys.slice(26, 30)
-  values5 = values.slice(26, 30)
+  var keys1 = keys.slice(0, 3)
+  var values1 = values.slice(0, 3)
+  var keys2 = keys.slice(8,14)
+  var values2 = values.slice(8,14)
+  var keys3 = keys.slice(14, 20)
+  var values3 = values.slice(14, 20)
+  var keys4 = keys.slice(20, 26)
+  var values4 = values.slice(20, 26)
+  var keys5 = keys.slice(26, 30)
+  var values5 = values.slice(26, 30)
 
   // Create dictionaries for each category
   var eigendomscategorie = createDict(keys1, values1)
@@ -691,7 +694,7 @@ function makePiechart(data, stadsdeelnaam){
   var opleidingsniveau = createDict(keys5, values5)
 
   // Connect dropdown menu options to actual data
-  all_data = {"Eigendomscategorie": eigendomscategorie,
+  var all_data = {"Eigendomscategorie": eigendomscategorie,
               "Inkomensgroepen": inkomensgroepen,
               "Woonsituatie": woonsituatie,
               "Leeftijdsgroep": leeftijdsgroep,
