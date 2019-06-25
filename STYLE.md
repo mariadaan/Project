@@ -8,3 +8,11 @@ _They will have a space after the slashes and the first letter will be capitaliz
 
 #### Indents
 _d3.select dots will be lined up vertically_
+
+d3.selectAll(".bar")
+  .data(values)
+  .transition()
+  .duration(1000)
+  .text("like this!")
+
+  

@@ -189,7 +189,9 @@ function makeMap(buurtdata, data, stadsdeel_info){
        handleButtons(data, stadsdeelnaam)
        // makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
-       showInfo(stadsdeel_info, stadsdeelnaam)
+       // updatePiechart(data, stadsdeelnaam)
+       // showInfo(stadsdeel_info, stadsdeelnaam)
+       updateInfo(stadsdeel_info, stadsdeelnaam)
        fillAgain(svg, color, data, stadsdeel, stadsdeelnaam)
        updateTitle(stadsdeelnaam)
        d3.event.stopPropagation() // prevent to select parents when children are clicked
@@ -206,24 +208,28 @@ function makeMap(buurtdata, data, stadsdeel_info){
         console.log(keys, values)
         updateBarchart(stadsdeelnaam, keys, values)
         fillAgain(svg, color, data, stadsdeel, "Amsterdam")
+        console.log(keys, values)
         initialPage(data, stadsdeel_info)
+        updateInfo(stadsdeel_info, stadsdeelnaam)
         })
 
   // Draw all initial charts
   initialPage(data, stadsdeel_info)
   makeBarchart(data, "Amsterdam")
+  showInfo(stadsdeel_info, "Amsterdam")
 };
 
 
+// Give selected stadsdeel another color range (green)
 function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
-  // Give selected stadsdeel another color range (green)
   var color2 = d3.scaleLinear()
   .domain([0, 75])
   .range(["white", "rgb(134, 191, 84)"]);
 
   // fill stadsdeel
 	svg.selectAll(".buurt")
-	   .attr("stroke", "rgba(0, 0, 0, 0.3)")
+      .transition()
+      .duration(1000)
      .attr('fill',function(d, i) {
        // Make colour depending on value
        value = data[d.properties.Buurtcombinatie_code]['< 425']
@@ -242,7 +248,7 @@ function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
 // Initialize page with all elements
 function initialPage(data, stadsdeel_info){
   stadsdeelnaam = "Amsterdam"
-  showInfo(stadsdeel_info, stadsdeelnaam)
+  // showInfo(stadsdeel_info, stadsdeelnaam)
   // makeBarchart(data, stadsdeelnaam)
   handleButtons(data, stadsdeelnaam)
   makePiechart(data, stadsdeelnaam)
@@ -261,14 +267,12 @@ function updateTitle(stadsdeelnaam){
   // Update main title on top of the page
   d3.select("#titlepage").select("h1")
     .transition()
+    .duration(1000) // HOEZO ZIE JE DIT NIET??
     .text(stadsdeelnaam + ", 2013")
 }
 
 
 function showInfo(stadsdeel_info, stadsdeelnaam){
-  // Remove former piechart and title, if existing
-  d3.select("#info").selectAll("*").remove();
-
   var margin = 30,
 			width = 500 - margin - margin;
 			height = 400 - margin - margin;
@@ -282,6 +286,13 @@ function showInfo(stadsdeel_info, stadsdeelnaam){
      .attr("y", 40)
      .attr("font-size", "medium")
      .text(stadsdeel_info[stadsdeelnaam]);
+}
+
+function updateInfo(stadsdeel_info, stadsdeelnaam){
+  d3.select("#info").select("text")
+    .transition()
+    .duration(1000) // HOEZO ZIE JE DIT NIET??
+    .text(stadsdeel_info[stadsdeelnaam]);
 }
 
 
@@ -391,7 +402,7 @@ function makeBarchart(data, stadsdeelnaam){
   // // Remove former barchart, if existing
   // d3.select("#barchart").select("svg").remove();
 
-  var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen",
+  var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen (in € per maand)",
                 "Inkomensgroepen": "Bewoners naar inkomensgroepen"}
 
   // Update title
@@ -469,6 +480,160 @@ function makeBarchart(data, stadsdeelnaam){
 
 }
 
+function updatePiechart(data, stadsdeelnaam)  {
+  var svg = d3.select("#piechart").select("svg")
+
+  // Define width and height for barchart svg
+  var margin = {top: 20, right: 50, bottom: 20, left: 5},
+      width = 500 - margin.left - margin.right;
+      height = 300 - margin.top - margin.bottom;
+
+  // The radius of the pieplot is half the width or half the height (smallest one). Substract a bit of margin.
+  var radius = Math.min(width, height) / 2 - margin.top
+
+   // Create list of all keys and all values
+  keys = Object.keys(data[stadsdeelnaam])
+  values = [];
+  for (i in keys){
+    values.push(data[stadsdeelnaam][keys[i]]);
+  }
+
+  // Create a dictionary of keys and values
+  function createDict(keys, values){
+    var data = {};
+    for (i = 0; i < keys.length; i++) {
+      data[String(keys[i])] = values[i];
+      }
+    return data
+  }
+
+  // Select wanted elements by index
+  keys1 = keys.slice(0, 3)
+  values1 = values.slice(0, 3)
+  keys2 = keys.slice(8,14)
+  values2 = values.slice(8,14)
+  keys3 = keys.slice(14, 20)
+  values3 = values.slice(14, 20)
+  keys4 = keys.slice(20, 26)
+  values4 = values.slice(20, 26)
+  keys5 = keys.slice(26, 30)
+  values5 = values.slice(26, 30)
+
+  // Create dictionaries for each category
+  var eigendomscategorie = createDict(keys1, values1)
+  var inkomensgroepen = createDict(keys2, values2)
+  var woonsituatie = createDict(keys3, values3)
+  var leeftijdsgroep = createDict(keys4, values4)
+  var opleidingsniveau = createDict(keys5, values5)
+
+  // Connect dropdown menu options to actual data
+  all_data = {"Eigendomscategorie": eigendomscategorie,
+              "Inkomensgroepen": inkomensgroepen,
+              "Woonsituatie": woonsituatie,
+              "Leeftijdsgroep": leeftijdsgroep,
+              "Opleidingsniveau": opleidingsniveau}
+
+  // Create dropdown element
+  var dropdown = d3.select("#dropdown")
+                    .on("change", function(d){
+                      update(all_data[this.value], this.value);
+                      })
+
+  // Give options to dropdown
+  dropdown.selectAll("option")
+      .data(["Eigendomscategorie", "Inkomensgroepen", "Woonsituatie", "Leeftijdsgroep", "Opleidingsniveau"])
+      .enter().append("option")
+      .text(function (d) { return d; })
+
+  // My own color range with cool blue/green colors (very aesthetic)
+  var myColors = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#75c493", "#7598c4"];
+
+  // Set the color scale
+  var color = d3.scaleOrdinal()
+                .domain(keys)
+                .range(myColors);
+
+  // A function that creates / updates the plot for a given variable:
+  function update(data, categorie) {
+    var titles = {"Eigendomscategorie": "Omvang woningvoorraad naar eigendomscategorie per (samengestelde) buurtcombinatie",
+                "Inkomensgroepen": "Recente instromers en zittende bewoners naar inkomensgroepen",
+                "Woonsituatie": "Vorige woonsituatie recente instromers en zittende bewoners",
+                "Leeftijdsgroep": "Leeftijdsgroep recente instromers en zittende bewoners",
+                "Opleidingsniveau": "Opleidingsniveau recente instromers en zittende bewoners"}
+
+
+    // Show full title
+    d3.select("#titlepie").select("h2")
+      .text(titles[categorie])
+
+    // Compute the position of each group on the pie
+    var pie = d3.pie()
+                .value(function(d) {return d.value; });
+
+    var data_ready = pie(d3.entries(data))
+
+    // Create tooltip element
+    var tool_tip = d3.tip()
+                    .attr("class", "d3-tip")
+                    .html(function(d) {
+                      key = d.data.key
+                      value = d.data.value
+                      return key + ": " + percentageFormat(value); });
+     svg.call(tool_tip);
+     d3.select("#piechart").select("svg")
+    // map to data
+    var pie = svg.selectAll("path")
+      .data(data_ready)
+
+    // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
+    pie.enter()
+       .append('path')
+       .merge(pie)
+       .transition()
+       .duration(1000)
+       .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius)
+        )
+       .attr('fill', function(d){ return(color(d.data.key)) })
+       .attr("stroke", "white")
+       .style("stroke-width", "2px")
+       .style("opacity", 1);
+
+    // Add interactive tooltip
+    svg.selectAll("path")
+       .on('mouseover', tool_tip.show)
+       .on('mouseout', tool_tip.hide);
+
+    // Remove the groups that are not present anymore
+    pie.exit()
+       .remove()
+
+    d3.select("#piechart").selectAll("#legendaa").remove();
+
+    // Create legend elements
+    var legend = d3.legendColor()
+    .scale(color)
+    .cellFilter(function(d){
+      if (data[d.label]){
+        return true
+      }
+      else {
+        return false
+      }
+    });
+
+    // Add legend to piechart svg
+    svg.append("g")
+    .attr("id", "legendaa")
+    .attr("transform", "translate(150,-110)")
+    .call(legend);
+    }
+
+    // Initialize the plot with the first dataset
+    update(eigendomscategorie, "Eigendomscategorie")
+}
+
 function makePiechart(data, stadsdeelnaam){
   // Remove former piechart and title, if existing
   d3.select("#piechart").selectAll("*").remove();
@@ -487,8 +652,8 @@ function makePiechart(data, stadsdeelnaam){
               .attr("width", width + margin.left + margin.right)
       				.attr("height", height + margin.top + margin.bottom)
               .append("g")
-              // .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-              .attr("transform", "translate(" + 140 + "," + 150 + ")");
+              .attr("transform", "translate(" + (width / 2 - 110) + "," + height / 2 + ")");
+              // .attr("transform", "translate(" + 140 + "," + 150 + ")");
 
    // Create list of all keys and all values
  	keys = Object.keys(data[stadsdeelnaam])
@@ -546,7 +711,7 @@ function makePiechart(data, stadsdeelnaam){
       .enter().append("option")
       .text(function (d) { return d; })
 
-  // My own color range with cool blue/green colors, very aesthetic
+  // My own color range with cool blue/green colors (very aesthetic)
   var myColors = ["#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#75c493", "#7598c4"];
 
   // Set the color scale
@@ -562,11 +727,9 @@ function makePiechart(data, stadsdeelnaam){
                 "Leeftijdsgroep": "Leeftijdsgroep recente instromers en zittende bewoners",
                 "Opleidingsniveau": "Opleidingsniveau recente instromers en zittende bewoners"}
 
-    d3.select("#titlepie").selectAll("*").remove()
 
     // Show full title
-    d3.select("#titlepie")
-      .append("h2")
+    d3.select("#titlepie").select("h2")
       .text(titles[categorie])
 
     // Compute the position of each group on the pie

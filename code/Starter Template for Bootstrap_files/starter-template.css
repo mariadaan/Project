@@ -67,6 +67,10 @@ body {
 	margin-bottom: 0px;
 }
 
+.buurt, #dropdown, #Huurvoorraad, #Inkomensgroepen  {
+  cursor: pointer;
+}
+
 /* Set style for barchart svg */
 #barchart {
 	width: 500px;
