@@ -1,53 +1,3 @@
-function updateBarchart(stadsdeelnaam, keys, values){
-  // Define width and height for barchart svg
-	var margin = {top: 20, right: 30, bottom: 20, left: 50},
-			width = 500 - margin.left - margin.right;
-			height = 300 - margin.top - margin.bottom;
-
-  // Set the ranges
-  var x = d3.scaleBand()
-            .range([0, width])
-            .padding(0.1);
-  var y = d3.scaleLinear()
-            .range([height, 0]);
-
-  // Scale the range of the data in the domains
-  // Hardcode y-domain to make it easier to compare barcharts
-  x.domain(keys);
-  y.domain([0, 0.7]);
-
-  var bars = d3.select("#barchart").select("g").selectAll(".bar")
-                .data(values);
-
-  bars.enter()
-    .append("rect")
-    .attr("class", "bar")
-    .merge(bars)
-    .transition()
-    .duration(1000)
-    .attr("x", function(d, i) { return x(keys[i]); })
-		.attr("width", x.bandwidth())
-		.attr("y", function(d) { return y(d); })
-		.attr("height", function(d) { return 260 - y(d) })
-    .style("fill", function(d){
-      // Change barchart color to green to clarify data is about one stadsdeel
-      if (stadsdeelnaam !== "Amsterdam") {
-        return "rgb(134, 191, 84)"
-      }
-      else{
-        return "rgb(31, 120, 180)"
-      }});
-  bars.exit()
-     .remove()
-
-  d3.selectAll("#x-axis")
-    .transition()
-    .duration(1000)
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .style("font-size", "8px");
-}
-
 function handleButtons(data, stadsdeelnaam){
   // Button elements showing when active
   var button1 = d3.select("#Huurvoorraad")
@@ -72,6 +22,7 @@ function handleButtons(data, stadsdeelnaam){
   button1.classed("active", true)
   button2.classed("active", false)
 }
+
 
 
 // Initialize barchart
@@ -159,4 +110,55 @@ function makeBarchart(data, stadsdeelnaam){
 			.style("font-size", "12px")
       .text("Percentage -->");
 
+}
+
+
+function updateBarchart(stadsdeelnaam, keys, values){
+  // Define width and height for barchart svg
+	var margin = {top: 20, right: 30, bottom: 20, left: 50},
+			width = 500 - margin.left - margin.right;
+			height = 300 - margin.top - margin.bottom;
+
+  // Set the ranges
+  var x = d3.scaleBand()
+            .range([0, width])
+            .padding(0.1);
+  var y = d3.scaleLinear()
+            .range([height, 0]);
+
+  // Scale the range of the data in the domains
+  // Hardcode y-domain to make it easier to compare barcharts
+  x.domain(keys);
+  y.domain([0, 0.7]);
+
+  var bars = d3.select("#barchart").select("g").selectAll(".bar")
+                .data(values);
+
+  bars.enter()
+    .append("rect")
+    .attr("class", "bar")
+    .merge(bars)
+    .transition()
+    .duration(1000)
+    .attr("x", function(d, i) { return x(keys[i]); })
+		.attr("width", x.bandwidth())
+		.attr("y", function(d) { return y(d); })
+		.attr("height", function(d) { return 260 - y(d) })
+    .style("fill", function(d){
+      // Change barchart color to green to clarify data is about one stadsdeel
+      if (stadsdeelnaam !== "Amsterdam") {
+        return "rgb(134, 191, 84)"
+      }
+      else{
+        return "rgb(31, 120, 180)"
+      }});
+  bars.exit()
+     .remove()
+
+  d3.selectAll("#x-axis")
+    .transition()
+    .duration(1000)
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .style("font-size", "8px");
 }
