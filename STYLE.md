@@ -1,5 +1,4 @@
 ## Styleguide
-======
 
 #### Comments
 They will have a space after the slashes and the first letter will be capitalized. Comments will be used above every part of the code, even if it may seem obvious.
