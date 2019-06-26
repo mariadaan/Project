@@ -1,7 +1,6 @@
 import pandas as pd
 import json
 
-
 df = pd.read_csv('database.csv')
 
 with open('database.json', 'w') as outfile:
