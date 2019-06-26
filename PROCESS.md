@@ -83,4 +83,7 @@ Er zit nu een soepele overgang van blauw naar groen en terug in de barchart, wat
 ## Dag 16
 Cursor verandert in handje als je over de klikbare items hovert. Hierdoor is het duidelijker waar je wel en niet op kan klikken. Alleen de achtergrond van de kaart is geen handje maar is wel klikbaar, dat heb ik bewust zo gehouden. Vind ik logischer op een of andere manier.
 
-Er zit nu een mooie overgang in kleur in zowel de barchart als de kaart. Ook verandert de x-as van de barchart smooth als er op een van de buttons gedrukt wordt. 
+Er zit nu een mooie overgang in kleur in zowel de barchart als de kaart. Ook verandert de x-as van de barchart smooth als er op een van de buttons gedrukt wordt.
+
+## Dag 17
+Code helemaal opgeschoond en compleet gemaakt met comments. Waar ik voorheen een groot javascript bestand had waar ik zelf ook de weg in kwijt raakte, is nu alles overzichtelijk verdeeld over aparte files. 

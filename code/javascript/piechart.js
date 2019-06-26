@@ -139,7 +139,7 @@ function makePiechart(data, stadsdeelnaam){
     pie.exit()
        .remove()
 
-    d3.select("#piechart").selectAll("#legendaa").remove();
+    d3.select("#piechart").selectAll("#legend").remove();
 
     // Create legend elements
     var legend = d3.legendColor()
@@ -155,7 +155,7 @@ function makePiechart(data, stadsdeelnaam){
 
     // Add legend to piechart svg
     svg.append("g")
-    .attr("id", "legendaa")
+    .attr("id", "legend")
     .attr("transform", "translate(150,-110)")
     .call(legend);
     }
