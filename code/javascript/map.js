@@ -50,7 +50,7 @@ function makeMap(buurtdata, data, stadsdeel_info){
   var buurtcode = ""
 
   // Create tooltip element
-  var tool_tip = d3.tip()
+  var toolTip = d3.tip()
       .attr("class", "d3-tip")
       .offset([-8, 0])
       .html(function(d) {
@@ -66,7 +66,7 @@ function makeMap(buurtdata, data, stadsdeel_info){
           return d.properties.Buurtcombinatie
         }
       });
-    svg.call(tool_tip);
+    svg.call(toolTip);
 
   // Create defs element to store graphical object (gradient legenda)
   var defs = svg.append("defs");
@@ -90,19 +90,18 @@ function makeMap(buurtdata, data, stadsdeel_info){
   var height = 20
 
   // Define where on svg the element and text labels should be located
-  var x_start = 40
-  var x_end = x_start + width
+  var xStart = 40
   var distance = 78
 
   // Draw the rectangle and fill with gradient
   svg.append("rect")
      .attr("y", 340)
-     .attr("x", x_start)
+     .attr("x", xStart)
      .attr("width", width)
      .attr("height", height)
      .style("fill", "url(#linear-gradient)");
 
-
+  // Add labels to map legend
   function addLabel(svg, x, label){
     svg.append("text")
        .attr("y", 377)
@@ -111,14 +110,15 @@ function makeMap(buurtdata, data, stadsdeel_info){
        .attr("font-size", 13)
        .text(label)
        .style("fill", "DarkSlateGray");
-      }
-
-    labels = ["0%", "25%", "50%", "75%"]
-
-    for (i in labels){
-      var offset = x_start + distance * i
-      addLabel(svg, offset, labels[i])
   }
+
+  labels = ["0%", "25%", "50%", "75%"]
+
+  // Place labels at the right coordinates
+  for (i in labels){
+    var offset = xStart + distance * i
+    addLabel(svg, offset, labels[i])
+    }
 
 
   // Draw the buurten
@@ -167,17 +167,16 @@ function makeMap(buurtdata, data, stadsdeel_info){
        var values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
        updateBarchart(stadsdeelnaam, keys, values)
        handleButtons(data, stadsdeelnaam)
-       // makeBarchart(data, stadsdeelnaam)
        makePiechart(data, stadsdeelnaam)
-       // updatePiechart(data, stadsdeelnaam)
-       // showInfo(stadsdeel_info, stadsdeelnaam)
        updateInfo(stadsdeel_info, stadsdeelnaam)
        fillAgain(svg, color, data, stadsdeel, stadsdeelnaam)
        updateTitle(stadsdeelnaam)
-       d3.event.stopPropagation() // prevent to select parents when children are clicked
+
+       // Prevent to select parents when children are clicked
+       d3.event.stopPropagation()
         })
-		 .on('mouseover', tool_tip.show)
-     .on('mouseout', tool_tip.hide)
+		 .on('mouseover', toolTip.show)
+     .on('mouseout', toolTip.hide)
 
   // Go back to initial page when background is clicked
   d3.select("#map")
@@ -204,7 +203,7 @@ function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
   .domain([0, 75])
   .range(["white", "rgb(134, 191, 84)"]);
 
-  // fill stadsdeel
+  // Fill stadsdeel
 	svg.selectAll(".buurt")
       .transition()
       .duration(1000)
@@ -213,10 +212,12 @@ function fillAgain(svg, color, data, stadsdeel, stadsdeelnaam){
        var value = data[d.properties.Buurtcombinatie_code]['< 425']
 
        if (stadsdeelnaam == stadsdeel[d.properties.Stadsdeel_code] && stadsdeelnaam !== "Amsterdam"){
+         // Fill green
          var value = data[d.properties.Buurtcombinatie_code]['< 425']
          return color2(parseInt(value * 100))
        }
        else {
+         // Fill blue
          return color(parseInt(value * 100));
        }
       })

@@ -1,3 +1,4 @@
+// Create piechart
 function makePiechart(data, stadsdeelnaam){
   // Remove former piechart and title, if existing
   d3.select("#piechart").selectAll("*").remove();
@@ -17,7 +18,6 @@ function makePiechart(data, stadsdeelnaam){
       				.attr("height", height + margin.top + margin.bottom)
               .append("g")
               .attr("transform", "translate(" + (width / 2 - 110) + "," + height / 2 + ")");
-              // .attr("transform", "translate(" + 140 + "," + 150 + ")");
 
    // Create list of all keys and all values
  	var keys = Object.keys(data[stadsdeelnaam])
@@ -55,7 +55,7 @@ function makePiechart(data, stadsdeelnaam){
   var opleidingsniveau = createDict(keys5, values5)
 
   // Connect dropdown menu options to actual data
-  var all_data = {"Eigendomscategorie": eigendomscategorie,
+  var options = {"Eigendomscategorie": eigendomscategorie,
               "Inkomensgroepen": inkomensgroepen,
               "Woonsituatie": woonsituatie,
               "Leeftijdsgroep": leeftijdsgroep,
@@ -66,7 +66,7 @@ function makePiechart(data, stadsdeelnaam){
                     .insert("select", "svg")
                     .attr("id", "dropdown")
                     .on("change", function(d){
-                      update(all_data[this.value], this.value);
+                      update(options[this.value], this.value);
                       })
 
   // Give options to dropdown
@@ -83,6 +83,7 @@ function makePiechart(data, stadsdeelnaam){
                 .domain(keys)
                 .range(myColors);
 
+
   // A function that creates / updates the plot for a given variable:
   function update(data, categorie) {
     var titles = {"Eigendomscategorie": "Omvang woningvoorraad naar eigendomscategorie per (samengestelde) buurtcombinatie",
@@ -90,7 +91,6 @@ function makePiechart(data, stadsdeelnaam){
                 "Woonsituatie": "Vorige woonsituatie recente instromers en zittende bewoners",
                 "Leeftijdsgroep": "Leeftijdsgroep recente instromers en zittende bewoners",
                 "Opleidingsniveau": "Opleidingsniveau recente instromers en zittende bewoners"}
-
 
     // Show full title
     d3.select("#titlepie").select("h2")
@@ -103,13 +103,13 @@ function makePiechart(data, stadsdeelnaam){
     var data_ready = pie(d3.entries(data))
 
     // Create tooltip element
-    var tool_tip = d3.tip()
+    var toolTip = d3.tip()
                     .attr("class", "d3-tip")
                     .html(function(d) {
                       key = d.data.key
                       value = d.data.value
                       return key + ": " + percentageFormat(value); });
-     svg.call(tool_tip);
+     svg.call(toolTip);
 
     // map to data
     var pie = svg.selectAll("path")
@@ -132,8 +132,8 @@ function makePiechart(data, stadsdeelnaam){
 
     // Add interactive tooltip
     svg.selectAll("path")
-       .on('mouseover', tool_tip.show)
-    	 .on('mouseout', tool_tip.hide);
+       .on('mouseover', toolTip.show)
+    	 .on('mouseout', toolTip.hide);
 
     // Remove the groups that are not present anymore
     pie.exit()

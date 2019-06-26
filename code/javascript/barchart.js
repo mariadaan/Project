@@ -1,11 +1,12 @@
+// Make sure buttons work correctly
 function handleButtons(data, stadsdeelnaam){
   // Button elements showing when active
   var button1 = d3.select("#Huurvoorraad")
                     .on("click", function(d){
                       button2.classed("active", false)
                       button1.classed("active", true)
-                      keys1 = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
-                      values1 = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
+                      var keys1 = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
+                      var values1 = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
                       updateBarchart(stadsdeelnaam, keys1, values1)
                       })
 
@@ -13,8 +14,8 @@ function handleButtons(data, stadsdeelnaam){
                     .on("click", function(d){
                       button1.classed("active", false)
                       button2.classed("active", true)
-                      keys2 = getData(data, stadsdeelnaam, "Inkomensgroepen")[0]
-                      values2 = getData(data, stadsdeelnaam, "Inkomensgroepen")[1]
+                      var keys2 = getData(data, stadsdeelnaam, "Inkomensgroepen")[0]
+                      var values2 = getData(data, stadsdeelnaam, "Inkomensgroepen")[1]
                       updateBarchart(stadsdeelnaam, keys2, values2);
                       })
 
@@ -24,15 +25,11 @@ function handleButtons(data, stadsdeelnaam){
 }
 
 
-
 // Initialize barchart
 function makeBarchart(data, stadsdeelnaam){
   var keys = getData(data, stadsdeelnaam, "Huurvoorraad")[0]
   var values = getData(data, stadsdeelnaam, "Huurvoorraad")[1]
   var categorie = "Huurvoorraad"
-
-  // // Remove former barchart, if existing
-  // d3.select("#barchart").select("svg").remove();
 
   var titles = {"Huurvoorraad": "Omvang huurvoorraad in vier klassen (in € per maand)",
                 "Inkomensgroepen": "Bewoners naar inkomensgroepen"}
@@ -49,13 +46,13 @@ function makeBarchart(data, stadsdeelnaam){
 
 	// Create SVG
 	var svg = d3.select("#barchart")
-				.append("svg")
-				.attr("id", "bars")
-				.attr("width", width + margin.left + margin.right)
-				.attr("height", height + margin.top + margin.bottom)
-				.append("g")
-    		.attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+							.append("svg")
+							.attr("id", "bars")
+							.attr("width", width + margin.left + margin.right)
+							.attr("height", height + margin.top + margin.bottom)
+							.append("g")
+    					.attr("transform",
+								"translate(" + margin.left + "," + margin.top + ")");
 
 	// Set the ranges
 	var x = d3.scaleBand()
@@ -70,11 +67,12 @@ function makeBarchart(data, stadsdeelnaam){
 	y.domain([0, 0.7]);
 
   // Create tooltip element
-  var tool_tip = d3.tip()
-     .attr("class", "d3-tip")
-     .offset([-8, 0])
-     .html(function(d) { return percentageFormat(d); });
-   svg.call(tool_tip);
+  var toolTip = d3.tip()
+     							.attr("class", "d3-tip")
+     							.offset([-8, 0])
+     							.html(function(d) { return percentageFormat(d); });
+
+	 svg.call(toolTip);
 
   // Create bars
   svg.selectAll(".bar")
@@ -86,8 +84,8 @@ function makeBarchart(data, stadsdeelnaam){
 		.attr("width", x.bandwidth())
 		.attr("y", function(d) { return y(d); })
 		.attr("height", function(d) { return height - y(d) })
-		.on('mouseover', tool_tip.show)
-		.on('mouseout', tool_tip.hide);
+		.on('mouseover', toolTip.show)
+		.on('mouseout', toolTip.hide);
 
 	// Add x axis
 	svg.append("g")
@@ -108,11 +106,11 @@ function makeBarchart(data, stadsdeelnaam){
       .attr("dy", "1em")
       .style("text-anchor", "middle")
 			.style("font-size", "12px")
-      .text("Percentage -->");
-
+      .text("Aandeel -->");
 }
 
 
+// Update bars when map or button is clicked
 function updateBarchart(stadsdeelnaam, keys, values){
   // Define width and height for barchart svg
 	var margin = {top: 20, right: 30, bottom: 20, left: 50},
@@ -132,29 +130,32 @@ function updateBarchart(stadsdeelnaam, keys, values){
   y.domain([0, 0.7]);
 
   var bars = d3.select("#barchart").select("g").selectAll(".bar")
-                .data(values);
+               .data(values);
 
+  // Update bars height and change color to clarify data is about one stadsdeel
   bars.enter()
-    .append("rect")
-    .attr("class", "bar")
-    .merge(bars)
-    .transition()
-    .duration(1000)
-    .attr("x", function(d, i) { return x(keys[i]); })
-		.attr("width", x.bandwidth())
-		.attr("y", function(d) { return y(d); })
-		.attr("height", function(d) { return 260 - y(d) })
-    .style("fill", function(d){
-      // Change barchart color to green to clarify data is about one stadsdeel
-      if (stadsdeelnaam !== "Amsterdam") {
-        return "rgb(134, 191, 84)"
-      }
-      else{
-        return "rgb(31, 120, 180)"
-      }});
-  bars.exit()
-     .remove()
+    	.append("rect")
+    	.attr("class", "bar")
+    	.merge(bars)
+    	.transition()
+    	.duration(1000)
+    	.attr("x", function(d, i) { return x(keys[i]); })
+			.attr("width", x.bandwidth())
+			.attr("y", function(d) { return y(d); })
+			.attr("height", function(d) { return 260 - y(d) })
+    	.style("fill", function(d){
+		      if (stadsdeelnaam !== "Amsterdam") {
+		        return "rgb(134, 191, 84)"
+		      }
+		      else{
+		        return "rgb(31, 120, 180)"
+	      }});
 
+	// Remove bars that are not present anymore
+  bars.exit()
+      .remove()
+
+	// Update x-axis
   d3.selectAll("#x-axis")
     .transition()
     .duration(1000)

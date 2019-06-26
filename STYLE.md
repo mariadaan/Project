@@ -16,11 +16,13 @@ Tabs will be used for indentation, always just one tab per indent.
 Two blank lines between functions, one blank line between every other piece of code. Lines used for comments are seen as part of this code.
 
 #### Variable and function naming
-Variable names will be kept as short and clear as possible. When a two-word name is necessary, camelCase will be used. Function names have to show the function's purpose. CamelCase will be used for this as well.
+In all JavaScript files, variable names will be kept as short and clear as possible. When a two-word name is necessary, camelCase will be used. Function names have to show the function's purpose. CamelCase will be used for this as well.
 
 _var colorScale_
 
 _function makeMap_
+
+For python files, snake_case is used instead of camelCase. 
 
 #### Code grouping
 In the root of the repository, my index.html and visualisatie.html files are located. In a separate folder, all JavaScript files are located.
