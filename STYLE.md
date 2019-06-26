@@ -8,11 +8,7 @@ _// The comments in my code will look like this_
 #### Indents
 d3.select dots will be lined up vertically
 
-_d3.selectAll(".bar")_
-  _.data(values)_
-  _.transition()_
-  _.duration(1000)_
-  _.text("like this!")_
+![blah](https://github.com/mariadaan/Project/blob/master/doc/d3style.png)
 
 Tabs will be used for indentation, always just one tab per indent.
 
