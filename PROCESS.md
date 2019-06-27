@@ -78,7 +78,12 @@ Hover bij barchart verwijderd omdat dit de indruk geeft dat het klikbaar is. Kle
 ## Dag 15
 Eindelijk de barchart updatend gemaakt. Code opgeschoond en comments geplaatst. Nieuw kleurenschema gemaakt voor de piechart om alles mooi bij elkaar te laten passen. Ik heb wel dezelde animatie-stijl behouden omdat ik het juist zo leuk vind hoe het beweegt. Ook heb ik voor een mix van verschillende kleuren groen en blauw gekozen om niet de indruk te wekken dat er een volgorde in de categorieën zit. Deze structuur zorgt ervoor dat je oplettend blijft en dat het interessant is om de tooltip te gebruiken.
 
+![blah](https://github.com/mariadaan/Project/blob/master/doc/piechartkleuren.png)
+
 Er zit nu een soepele overgang van blauw naar groen en terug in de barchart, wat er mooi uitziet. Er zitten nog wat laatste bugs in die ik morgen moet oplossen. Ook wil ik de over-pagina nog een beetje upgraden, misschien met een mooie foto van Amsterdam en nog iets meer informatie over het doel van deze datavisualisatie.
+
+![blah](https://github.com/mariadaan/Project/blob/master/doc/noord.png)
+
 
 ## Dag 16
 Cursor verandert in handje als je over de klikbare items hovert. Hierdoor is het duidelijker waar je wel en niet op kan klikken. Alleen de achtergrond van de kaart is geen handje maar is wel klikbaar, dat heb ik bewust zo gehouden. Vind ik logischer op een of andere manier.
@@ -86,4 +91,4 @@ Cursor verandert in handje als je over de klikbare items hovert. Hierdoor is het
 Er zit nu een mooie overgang in kleur in zowel de barchart als de kaart. Ook verandert de x-as van de barchart smooth als er op een van de buttons gedrukt wordt.
 
 ## Dag 17
-Code helemaal opgeschoond en compleet gemaakt met comments. Waar ik voorheen een groot javascript bestand had waar ik zelf ook de weg in kwijt raakte, is nu alles overzichtelijk verdeeld over aparte files. 
+Code helemaal opgeschoond en compleet gemaakt met comments. Waar ik voorheen een groot javascript bestand had waar ik zelf ook de weg in kwijt raakte, is nu alles overzichtelijk verdeeld over aparte files.
