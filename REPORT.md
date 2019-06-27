@@ -26,6 +26,7 @@ De pagina bestaat uit de volgende onderdelen:
   - Piechart met dropdown menu om te wisselen tussen categorieën
 - Link naar de databron
 
+![blah](https://github.com/mariadaan/Project/blob/master/doc/screen.jpg)
 
 #### File & Code Structure
 Elk paginaonderdeel wordt aangemaakt in een aparte file. Deze verdeling maakt alles overzichtelijk en goed te vinden.
@@ -63,6 +64,30 @@ Als laatste zijn er nog wat bestanden die nodig zijn geweest om de data in de ge
 De andere bestanden in het mapje Starter Template for Bootstrap_files zijn niet door mij aangepast en horen bij het template van [Bootstrap](https://getbootstrap.com/docs/4.3/examples/starter-template/).
 
 ## Functies
+De belangrijkste functies worden hier kort toegelicht.
+#### map.js
+_makeMap_: Aanmaken van een svg voor de kaart, kaart van Amsterdam hierop weergeven, data koppelen aan kaart. Kaart kleur geven op basis van deze data met bijbehorende gradient legenda. On-click event om andere charts te updaten. Titel bovenaan pagina. Alle functies om de charts te teken worden vanuit hier aangeroepen voor de initiële pagina.
+_fillAgain_: Stadsdeel groen maken na klik, weer blauw maken na achtergrondklik.
+
+#### barchart.js
+_handleButtons_: Buttons voor barchart actief maken zodat functies aanroepen bij een klik.
+_makeBarchart_: Maakt barchart svg aan en alles wat hierbij hoort (titels, assen, etc.)
+_updateBarchart_: Update de barchart na een button klik of kaart klik
+
+#### piechart.js
+_makePiechart_: Maakt piechart svg aan en alles wat hierbij hoort (titels, assen, etc.). De update functie voor de piechart zit hierbinnen.
+
+#### info.js
+_showInfo_: Maakt plek op de pagina voor het tekstvakje
+_updateInfo_: Update de tekst in het vak
+
+#### extras.js
+_updateTitle_: Update titel bovenaan de pagina
+_initialPage_: Roept functies om initiële pagina te creeëren aan
+_percentageFormat__: Maakt string in percentage format van een float
+_getData_: Selecteert data uit array (gebruikt voor barchart)
+
+
 
 ## Uitdagingen en oplossingen
 De grootste uitdaging is vooral aan het begin geweest. De data die ik wilde gebruiken was verdeeld over allemaal losse Excel bestanden. Met Python probeerde ik dit samen te voegen, maar dit was een beetje _mission impossible_. Toen besloot ik om gewoon handmatig de data in één bestand te zetten, dit was misschien 2 uur werk. Dit is een hele goede beslissing geweest want hierdoor had ik alles precies in het gewenste format en heb ik later nooit meer problemen gehad met de data.
