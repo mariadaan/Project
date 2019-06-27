@@ -5,8 +5,8 @@
 - [Technisch design](#technisch-design)
     - [Onderdelen](#onderdelen)
     - [Functies](#functies)
-- [Uitdagingen](#uitdagingen)
-- [Beslissingen: waarom?](#Beslissingen:-waarom?)
+- [Uitdagingen en oplossingen](#uitdagingen-en-oplossingen)
+- [Beslissingen](#Beslissingen)
 - [Toekomst](#toekomst)
 
 ## Introductie
@@ -61,3 +61,15 @@ Als laatste zijn er nog wat bestanden die nodig zijn geweest om de data in de ge
 | convertCSV2JSON.py             | Python script om CSV bestand om te zetten in JSON bestand
 
 De andere bestanden in het mapje Starter Template for Bootstrap_files zijn niet door mij aangepast en horen bij het template van [Bootstrap](https://getbootstrap.com/docs/4.3/examples/starter-template/).
+
+## Functies
+
+## Uitdagingen en oplossingen
+De grootste uitdaging is vooral aan het begin geweest. De data die ik wilde gebruiken was verdeeld over allemaal losse Excel bestanden. Met Python probeerde ik dit samen te voegen, maar dit was een beetje _mission impossible_. Toen besloot ik om gewoon handmatig de data in één bestand te zetten, dit was misschien 2 uur werk. Dit is een hele goede beslissing geweest want hierdoor had ik alles precies in het gewenste format en heb ik later nooit meer problemen gehad met de data.
+
+Kleine dingen als het klikbaar maken van de achtergrond om terug te gaan naar de initiële pagina waren een hele uitdaging. De initialPage functie kon namelijk niet zomaar nog een keer aangeroepen worden, dan werden er opnieuw svgs aangemaakt die al bestonden. Ook wist ik niet goed hoe ik de achtergrond een klikbaar element moest maken, omdat het niet een g element is zoals een buurt maar het letterlijk niks is. Door een speciale functie te gebruiken die voorkomt dat bij het klikken van een element ook de 'parents' geselecteerd worden, heb ik toch kunnen bereiken wat ik wilde.
+
+Over de piechart was wat onenigheid. Ik vond de animatie namelijk juist erg leuk en ik vond de gebruikte kleuren ook mooi. De meeste mensen waren dit met me eens, maar sommige begeleiders (~~Nigel~~) waren het hier niet mee eens en vonden dat het één kleur en een simpelere animatie moest hebben. Ik heb besloten om dit niet aan te passen omdat ik de verschillende kleuren juist goed bij de pagina vind passen en omdat dit duidelijk maakt dat de categorieën niet allemaal ordinaal zijn. Ook zou één kleur verwarrend zijn doordat de piechart op volgorde van grootte staat. Dit heb ik gedaan om duidelijk te maken hoe de volgorde in grootte zit.
+
+## Toekomst
+Het zou in te toekomst nog leuk zijn om het tekstvakje beter te gebruiken en meer informatie te tonen die over dit specifieke onderwerp gaat, een verklaring van de data die zichtbaar is. Helaas heb ik hier geen tijd meer voor gehad omdat het ook niet echt prioriteit had. Een ander ding wat ik graag nog had willen fixen, is het updaten van de piechart. Met de dropdown gebeurt dit wel, maar bij het wisselen tussen stadsdelen wordt nog steeds de hele svg verwijderd en opnieuw gemaakt. Dat had anders gekund!
