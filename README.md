@@ -23,6 +23,7 @@ Dank aan de makers van de gebruikte libraries en script die dit project mogelijk
 - D3-Legend door // [Susie Lu](http://d3-legend.susielu.com/)
 - D3-tip door // [Justin Palmer](https://github.com/caged/d3-tip)
 - Datamap Amsterdam door // [Jules Blom](http://bl.ocks.org/JulesBlm/918e2987805c7189f568d95a4e8855b4)
+- D3 Piechart door // [Yan Holtz](https://www.d3-graph-gallery.com/graph/pie_changeData.html)
 - Bootstrap // [Starter Template](https://getbootstrap.com/docs/4.3/examples/starter-template/)
 
 Al deze externe bronnen hebben hun eigen licenses. Via de links zijn deze te vinden.
