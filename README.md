@@ -3,7 +3,7 @@ Een datavisualisatie gemaakt door Maria Daan voor het eindproject van de Minor P
 
 De webpagina vind je [hier](https://mariadaan.github.io/Project/).
 
-Een product demonstratie is [hier](https://youtube.com) te bekijken.
+Een product demonstratie is [hier](https://youtu.be/siDCsYUnMuA) te bekijken.
 
 ### Functionaliteit
 De datavisualisatie bevat een aantal onderdelen: een kaart, een barchart, een piechart en een korte beschrijving. Alle onderdelen zijn direct zichtbaar op de pagina zodra je in de balk op "Datavisualisatie" klikt. In eerste instantie zie je de data die geldt voor heel Amsterdam. In het kaartje zie je per buurt het percentage woningen van minder dan 425 euro per maand. Als je klikt op een buurt, worden de andere elementen geupdate. Je krijgt dan de informatie per stadsdeel te zien. Door de groene kleur die het geselecteerde stadsdeel krijgt en de titel bovenaan de pagina is duidelijk over welk stadsdeel er informatie weergegeven wordt. Om terug te gaan naar de initiële pagina over heel Amsterdam, klik je op de achtergrond in het kaartje.
@@ -16,7 +16,7 @@ Als laatste is in het tekstblok linksonder nog wat extra informatie te lezen ove
 
 ![blah](https://github.com/mariadaan/Project/blob/master/doc/screen.jpg)
 
-Op de 'Over' pagina, klikbaar linksboven in het scherm, staat een korte uitleg van het doel van de visualisatie. Verder is de website simpel en zonder onnodige extra poespas. De datavisualisatie spreekt voor zichzelf. 
+Op de 'Over' pagina, klikbaar linksboven in het scherm, staat een korte uitleg van het doel van de visualisatie. Verder is de website simpel en zonder onnodige extra poespas. De datavisualisatie spreekt voor zichzelf.
 
 
 ## Dankwoord
