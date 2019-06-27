@@ -67,11 +67,14 @@ De andere bestanden in het mapje Starter Template for Bootstrap_files zijn niet 
 De belangrijkste functies worden hier kort toegelicht.
 #### map.js
 _makeMap_: Aanmaken van een svg voor de kaart, kaart van Amsterdam hierop weergeven, data koppelen aan kaart. Kaart kleur geven op basis van deze data met bijbehorende gradient legenda. On-click event om andere charts te updaten. Titel bovenaan pagina. Alle functies om de charts te teken worden vanuit hier aangeroepen voor de initiële pagina.
+
 _fillAgain_: Stadsdeel groen maken na klik, weer blauw maken na achtergrondklik.
 
 #### barchart.js
 _handleButtons_: Buttons voor barchart actief maken zodat functies aanroepen bij een klik.
+
 _makeBarchart_: Maakt barchart svg aan en alles wat hierbij hoort (titels, assen, etc.)
+
 _updateBarchart_: Update de barchart na een button klik of kaart klik
 
 #### piechart.js
@@ -79,12 +82,16 @@ _makePiechart_: Maakt piechart svg aan en alles wat hierbij hoort (titels, assen
 
 #### info.js
 _showInfo_: Maakt plek op de pagina voor het tekstvakje
+
 _updateInfo_: Update de tekst in het vak
 
 #### extras.js
 _updateTitle_: Update titel bovenaan de pagina
+
 _initialPage_: Roept functies om initiële pagina te creeëren aan
+
 _percentageFormat__: Maakt string in percentage format van een float
+
 _getData_: Selecteert data uit array (gebruikt voor barchart)
 
 
