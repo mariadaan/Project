@@ -28,7 +28,7 @@ Dank aan de makers van de gebruikte libraries en script die dit project mogelijk
 - D3 Piechart door // [Yan Holtz](https://www.d3-graph-gallery.com/graph/pie_changeData.html)
 - Bootstrap // [Starter Template](https://getbootstrap.com/docs/4.3/examples/starter-template/)
 
-Al deze externe bronnen hebben hun eigen licenses. Via de links zijn deze te vinden.
+Al deze externe bronnen hebben hun eigen licensties. Via de links zijn deze te vinden. Verder is alles door mijzelf gemaakt en behoren deze rechten dus ook tot mij.
 
 ## Gemaakt door
 Maria Daan (11243406) [Github](https://github.com/mariadaan)
