@@ -16,6 +16,8 @@ Als laatste is in het tekstblok linksonder nog wat extra informatie te lezen ove
 
 ![blah](https://github.com/mariadaan/Project/blob/master/doc/screen.jpg)
 
+Op de 'Over' pagina, klikbaar linksboven in het scherm, staat een korte uitleg van het doel van de visualisatie. Verder is de website simpel en zonder onnodige extra poespas. De datavisualisatie spreekt voor zichzelf. 
+
 
 ## Dankwoord
 Dank aan de makers van de gebruikte libraries en script die dit project mogelijk gemaakt hebben:
